@@ -1,13 +1,13 @@
 import React from "react";
 
-class Login extends React.Component {
+class BackOffice extends React.Component {
   render() {
     return (
       <div>
-          Login
+          BackOffice
       </div>
     );
   }
 }
 
-export default Login;
+export default BackOffice;
