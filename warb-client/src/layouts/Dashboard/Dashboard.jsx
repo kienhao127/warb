@@ -16,7 +16,7 @@ import dashboardRoutes from "routes/dashboard.jsx";
 
 import dashboardStyle from "assets/jss/material-dashboard-react/layouts/dashboardStyle.jsx";
 
-import image from "assets/img/sidebar-2.jpg";
+import image from "assets/img/sidebar-3.jpg";
 import logo from "assets/img/favicon.png";
 
 const switchRoutes = (
@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.wrapper} style={{backgroundColor: '#FFF'}}>
         <Sidebar
           routes={dashboardRoutes}
           logoText={"Creative Tim"}
