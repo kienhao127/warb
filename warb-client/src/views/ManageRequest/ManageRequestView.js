@@ -1,5 +1,9 @@
 import React from "react";
 import Table from "components/Table/Table.jsx";
+import Card from "components/Card/Card.jsx";
+import CardHeader from "components/Card/CardHeader.jsx";
+import CardBody from "components/Card/CardBody.jsx";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const tableHead = [
   { id: 'tripId', label: 'Mã chuyến đi' },
@@ -15,25 +19,42 @@ class ManageRequestView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
-      tableTitle: 'Danh sách chuyến đi',
+    this.state = {
+      tableTitle: '',
       tableTitleSecondary: '',
       tableData: [],
     };
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
+      <Card>
+        <CardHeader color="primary">
+          <h2 className={classes.cardTitleWhite}>DANH SÁCH CHUYẾN ĐI</h2>
+        </CardHeader>
+        <CardBody>
           <Table
-            tableTitle={this.state.tableTitle}
+            tableTitle={''}
             tableTitleSecondary={this.state.tableTitleSecondary}
             tableHead={tableHead}
             tableData={this.state.tableData}
-          />
-      </div>
+          /></CardBody>
+      </Card>
     );
   }
 }
 
-export default ManageRequestView;
+const styles = {
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none"
+  }
+};
+
+export default withStyles(styles)(ManageRequestView);

@@ -8,7 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -41,7 +41,6 @@ function getSorting(order, orderBy) {
 const styles = theme => ({
   root: {
     width: '100%',
-    height: '100%',
   },
   table: {
     minWidth: 1020,
@@ -125,7 +124,7 @@ class EnhancedTable extends React.Component {
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
 
     return (
-      <Paper className={classes.root}>
+      <Card className={classes.root}>
         <TableToolBar 
           numSelected={selected.length} 
           tableTitle={tableTitle}
@@ -174,18 +173,18 @@ class EnhancedTable extends React.Component {
                       <TableCell padding="checkbox">
                         <Checkbox checked={isSelected} onChange={() => this.onSelectedChange(n.id)} color='default' />
                       </TableCell>
-                      <TableCell  style={{ textDecoration: 'none' }}  button component={Link} to={'/agent/ticket/' + n.id}>{n.subject}</TableCell>
-                      <TableCell  style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.requester}</TableCell>
-                      <TableCell  style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{moment(n.requestTime).format('DD/MM/YYYY HH:mm')}</TableCell>
-                      <TableCell  style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.type}</TableCell>
-                      <TableCell  style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.priority}</TableCell>
+                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n[tableHead[0].id]}</TableCell>
+                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.requester}</TableCell>
+                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{moment(n.requestTime).format('DD/MM/YYYY HH:mm')}</TableCell>
+                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.type}</TableCell>
+                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.priority}</TableCell>
                     </TableRow>
                   );
                 })}
             </TableBody>
           </Table>
         </div>
-      </Paper>
+      </Card>
     );
   }
 }
