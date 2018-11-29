@@ -41,6 +41,6 @@ exports.addRefreshToken = function(c) {
 	return db.write(sql);
 }
 exports.getRefreshTokenByToken = function(token) {
-	var sql = `select * from token where refresh_token = ${md5_token}`;
+	var sql = `select * from token where refresh_token = ${token}`;
 	return db.write(sql);
 }
