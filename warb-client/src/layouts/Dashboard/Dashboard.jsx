@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
     return (
-      <div className={classes.wrapper} style={{backgroundColor: '#FFF'}}>
+      <div className={classes.wrapper} style={{backgroundColor: '#EFEFEF'}}>
         <Sidebar
           routes={dashboardRoutes}
           logoText={"Creative Tim"}
