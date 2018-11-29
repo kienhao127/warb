@@ -1,4 +1,4 @@
-
+var token=require('../utils/Utils.js');
 express = require('express');
 var userCtrl= require('../controller/UserCtrl')
 
@@ -8,9 +8,12 @@ router.route('/')
 .get(userCtrl.showAll)
 
 router.route('/login')
-.get(userCtrl.login)
+.post(userCtrl.login)
 
 router.route('/register') 
 .post(userCtrl.register);
+
+router.route('/id') 
+.post(token.checkAccessToken,userCtrl.getUser);
 
 module.exports = router;
