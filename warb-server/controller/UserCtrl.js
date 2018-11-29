@@ -6,12 +6,19 @@ exports.showAll = function(req,res) {
 	userRepo.loadAll()
 	.then(rows => {
 		res.statusCode = 201;
-		res.json(rows);
+		res.json({
+			returnCode:1,
+			message:"get staff susscess",
+			object:rows
+		});
 	})
 	.catch(err => {
 		console.log(err);
 		res.statusCode = 500;
-		res.end('View error log on server console');
+		res.json({
+			returnCode:0,
+			message:"get staff error"
+		});
 	})
 };
 
@@ -35,7 +42,8 @@ exports.login = function(req,res) {
 
 					res.statusCode = 201;
 					res.json({
-						auth:true,
+						returnCode:1,
+			            message:"login susscess",
 						userId:rows[0].id,
 						username:rows[0].username,
 						userType:rows[0].userType,
@@ -51,7 +59,8 @@ exports.login = function(req,res) {
 
 					res.statusCode = 201;
 					res.json({
-						auth:true,
+						returnCode:1,
+			            message:"login susscess",
 						userId:rows[0].id,
 						username:rows[0].username,
 						userType:rows[0].userType,
@@ -74,7 +83,8 @@ exports.login = function(req,res) {
 		}else{
 			res.statusCode = 201;
 			res.json({
-				auth:false
+				returnCode:0,
+			    message:"login error"
 			});
 		}
 	})
@@ -92,12 +102,16 @@ exports.register = function(req,res) {
 	.then(rows => {
 		res.statusCode = 201;
 		res.json({
-			msg: 'user added'
+			returnCode:1,
+			msg: 'register success'
 		});
 	})
 	.catch(err => {
 		console.log(err);
 		res.statusCode = 500;
-		res.end('View error log on server console');
+		res.json({
+			returnCode:0,
+			msg: 'register error'
+		});
 	})
 };

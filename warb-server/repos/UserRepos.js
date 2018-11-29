@@ -12,15 +12,13 @@ exports.loadOne = function(c) {
 }
 
 exports.login = function(c) {
-	var md5_pwd=md5(c.password);
-	var sql = `select * from staff where username = '${c.username}' and password = '${md5_pwd}'`;
+	var sql = `select * from staff where username = '${c.username}' and password = '${c.password}'`;
 	console.log(sql);
 	return db.load(sql);
 }
 
 exports.add = function(c) {
-	var md5_pwd=md5(c.password);
-	var sql = `insert into staff(username,password,fullname,userType,isDelete) values('${c.username}','${md5_pwd}','${c.fullname}',${c.userType},${c.isDelete})`;
+	var sql = `insert into staff(username,password,fullname,userType,isDelete) values('${c.username}','${c.password}','${c.fullname}',${c.userType},${c.isDelete})`;
 	return db.write(sql);
 }
 
