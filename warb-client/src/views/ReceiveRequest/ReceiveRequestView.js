@@ -17,7 +17,57 @@ class ReceiveRequestView extends React.Component {
       phone: '',
       address: '',
       note: '',
+
+      nameErrorMessage: '',
+      phoneErrorMessage: '',
+      addressErrorMessage: '',
+
+      errorCount: 0,
     };
+  }
+
+  checkValidation = (name, phone, address, note) => {
+    var errorCount = 0;
+    if (name === ''){
+      this.setState({
+        nameErrorMessage: 'Họ tên không được để trống'
+      })
+      errorCount++;
+    } else {
+      this.setState({
+        nameErrorMessage: ''
+      })
+    }
+
+    if (phone === ''){
+      this.setState({
+        phoneErrorMessage: 'Số điện thoại không được để trống'
+      })
+      errorCount++;
+    } else {
+      this.setState({
+        phoneErrorMessage: ''
+      })
+    }
+
+    if (address === ''){
+      this.setState({
+        addressErrorMessage: 'Địa chỉ không được để trống'
+      })
+      errorCount++;
+    } else {
+      this.setState({
+        addressErrorMessage: ''
+      })
+    }
+
+    this.setState({
+      errorCount: errorCount
+    })
+    if (errorCount === 0){
+      return true;
+    }
+    return false;
   }
 
   handleChange = name => event => {
@@ -26,6 +76,12 @@ class ReceiveRequestView extends React.Component {
     });
   };
 
+  onReceiveClick = () => {
+    var check = this.checkValidation(this.state.name, this.state.phone, this.state.address, this.state.note);
+    if (check){
+
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -38,35 +94,46 @@ class ReceiveRequestView extends React.Component {
               <h2 className={classes.cardTitleWhite}>THÔNG TIN CHUYẾN ĐI</h2>
             </CardHeader>
             <CardBody>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: 20 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: 20 }}>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <TextField
-                    id="standard-name"
-                    label="Họ tên"
-                    className={classes.textField}
-                    style={{ marginRight: 10 }}
-                    value={this.state.name}
-                    onChange={this.handleChange('name')}
-                    margin="normal"
-                  />
-                  <TextField
-                    id="standard-name"
-                    label="Số điện thoại"
-                    className={classes.textField}
-                    style={{ marginLeft: 10 }}
-                    value={this.state.phone}
-                    onChange={this.handleChange('phone')}
-                    margin="normal"
-                  />
+                  <div style={{ display: 'flex', flexDirection: 'column' }} className={classes.textField}>
+                    <TextField
+                      error={this.state.errorCount !== 0 && this.state.nameErrorMessage !== ''}
+                      id="standard-name"
+                      label="Họ tên *"
+                      className={classes.textField}
+                      style={{ marginRight: 10 }}
+                      value={this.state.name}
+                      onChange={this.handleChange('name')}
+                      margin="normal"
+                    />
+                    <Typography style={{ color: 'red', fontFamily: 'Roboto-Light', fontSize: 12 }}>{this.state.nameErrorMessage}</Typography>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column' }} className={classes.textField}>
+                    <TextField
+                      error={this.state.errorCount !== 0 && this.state.phoneErrorMessage !== ''}
+                      id="standard-name"
+                      label="Số điện thoại *"
+                      className={classes.textField}
+                      style={{ marginLeft: 10 }}
+                      value={this.state.phone}
+                      onChange={this.handleChange('phone')}
+                      margin="normal"
+                    />
+                    <Typography style={{ color: 'red', fontFamily: 'Roboto-Light', fontSize: 12 }}>{this.state.phoneErrorMessage}</Typography>
+                  </div>
                 </div>
                 <TextField
+                  error={this.state.errorCount !== 0 && this.state.addressErrorMessage !== ''}
                   id="standard-name"
-                  label="Địa chỉ đón khách"
+                  label="Địa chỉ đón khách *"
                   className={classes.textField}
                   value={this.state.address}
                   onChange={this.handleChange('address')}
                   margin="normal"
                 />
+                <Typography style={{ color: 'red', fontFamily: 'Roboto-Light', fontSize: 12 }}>{this.state.addressErrorMessage}</Typography>
                 <TextField
                   id="standard-name"
                   label="Ghi chú"
@@ -77,7 +144,7 @@ class ReceiveRequestView extends React.Component {
                   multiline
                   rows="6"
                 />
-                <Button round variant="contained" color="primary" style={{ width: 100, marginLeft: 'auto' }}>
+                <Button round variant="contained" color="primary" style={{ width: 100, marginLeft: 'auto' }} onClick={this.onReceiveClick}>
                   <Typography style={{ color: '#FFFFFF' }}>Nhận</Typography>
                 </Button>
               </div>

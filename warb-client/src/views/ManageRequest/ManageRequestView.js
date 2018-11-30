@@ -1,8 +1,5 @@
 import React from "react";
 import Table from "components/Table/Table.jsx";
-import Card from "components/Card/Card.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
-import CardBody from "components/Card/CardBody.jsx";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 const tableHead = [
@@ -27,20 +24,14 @@ class ManageRequestView extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
-      <Card>
-        <CardHeader color="primary">
-          <h2 className={classes.cardTitleWhite}>DANH SÁCH CHUYẾN ĐI</h2>
-        </CardHeader>
-        <CardBody>
-          <Table
-            tableTitle={''}
-            tableTitleSecondary={this.state.tableTitleSecondary}
-            tableHead={tableHead}
-            tableData={this.state.tableData}
-          /></CardBody>
-      </Card>
+      <Table
+        tableTitle={''}
+        tableTitleSecondary={this.state.tableTitleSecondary}
+        tableHead={tableHead}
+        tableData={this.state.tableData}
+      />
     );
   }
 }

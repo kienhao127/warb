@@ -3,12 +3,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Table from "components/Table/Table.jsx";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
-import Button from "components/CustomButtons/Button.jsx";
-import Card from "components/Card/Card.jsx";
-import CardAvatar from "components/Card/CardAvatar.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import avatar from "assets/img/faces/marc.jpg";
+// import Button from "components/CustomButtons/Button.jsx";
+import UserProfile from "components/UserProfile/UserProfile";
 
 
 const tableDriverHead = [
@@ -28,44 +24,19 @@ class ManageStaff extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <GridContainer>
         <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h2 className={classes.cardTitleWhite}>DANH SÁCH TÀI XẾ</h2>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableTitle={''}
-                tableTitleSecondary={this.state.tableTitleSecondary}
-                tableHead={tableDriverHead}
-                tableData={this.state.tableDriverData}
-              />
-            </CardBody>
-          </Card>
+          <Table
+            tableTitle={'DANH SÁCH NHÂN VIÊN'}
+            tableTitleSecondary={this.state.tableTitleSecondary}
+            tableHead={tableDriverHead}
+            tableData={this.state.tableDriverData}
+          />
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don't be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
+          <UserProfile />
         </GridItem>
       </GridContainer>
     );
@@ -73,6 +44,28 @@ class ManageStaff extends React.Component {
 }
 
 const styles = {
+  username: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
+  },
+  usercategory: {
+    fontFamily: 'Roboto-Light',
+    fontSize: 15,
+  },
+  userInfoLabel: {
+    fontFamily: 'Roboto-Light',
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 5,
+  },
+  userdob: {
+    fontFamily: 'Roboto-Light',
+    fontSize: 18,
+  },
+  userphone: {
+    fontFamily: 'Roboto-Light',
+    fontSize: 18,
+  },
   cardTitleWhite: {
     color: "#FFFFFF",
     marginTop: "0px",

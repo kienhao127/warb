@@ -2,17 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import CardHeader from "components/Card/CardHeader.jsx";
+import CardBody from "components/Card/CardBody.jsx";
 import TableHeader from './TableHeader.jsx'
 import TableToolBar from './TableToolBar.jsx';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Card from '@material-ui/core/Card';
+import Card from 'components/Card/Card.jsx';
 import Checkbox from '@material-ui/core/Checkbox';
-import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
+import tableStyle from "assets/jss/material-dashboard-react/components/tableStyle.jsx";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -38,21 +40,6 @@ function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  table: {
-    minWidth: 1020,
-  },
-  tableWrapper: {
-    overflow: 'auto',
-  },
-  tablePagination:{
-    flex: '1 1 50%',
-  }
-});
-
 class EnhancedTable extends React.Component {
   state = {
     order: 'asc',
@@ -76,7 +63,7 @@ class EnhancedTable extends React.Component {
   handleSelectAllClick = event => {
     if (event.target.checked) {
       var selected = this.props.tableData.map(n => n.id);
-      this.setState(state => ({ selected: selected}));
+      this.setState(state => ({ selected: selected }));
       this.props.doSelectedMail(selected);
       return;
     }
@@ -120,70 +107,76 @@ class EnhancedTable extends React.Component {
   }
 
   render() {
-    const { classes, tableHead, tableTitle, tableTitleSecondary, tableData } = this.props;
+    const { classes, tableHead, tableTitle, tableTitleSecondary, tableData, linkTo } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
 
     return (
-      <Card className={classes.root}>
-        <TableToolBar 
-          numSelected={selected.length} 
-          tableTitle={tableTitle}
-          tableTitleSecondary={tableTitleSecondary}
-          onDeleteMessage={() => this.onDeleteMail()}>
-          <TablePagination
-            className={classes.tablePagination}
-            component="div"
-            count={tableData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            labelRowsPerPage=''
-            rowsPerPageOptions={[]}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-          />
-        </TableToolBar>
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <TableHeader
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={tableData.length}
-              rows={tableHead}
+      <Card>
+        <CardHeader color="primary">
+          <h2 className={classes.cardTitleWhite}>{tableTitle}</h2>
+        </CardHeader>
+        <CardBody>
+          <TableToolBar
+            numSelected={selected.length}
+            tableTitle={''}
+            tableTitleSecondary={tableTitleSecondary}
+            onDeleteMessage={() => this.onDeleteMail()}>
+            <TablePagination
+              className={classes.tablePagination}
+              component="div"
+              count={tableData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              labelRowsPerPage=''
+              rowsPerPageOptions={[]}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page',
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page',
+              }}
+              onChangePage={this.handleChangePage}
             />
-            <TableBody>
-              {stableSort(tableData, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n.id);
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={n.id}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} onChange={() => this.onSelectedChange(n.id)} color='default' />
-                      </TableCell>
-                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n[tableHead[0].id]}</TableCell>
-                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.requester}</TableCell>
-                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{moment(n.requestTime).format('DD/MM/YYYY HH:mm')}</TableCell>
-                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.type}</TableCell>
-                      <TableCell style={{ textDecoration: 'none' }} button component={Link} to={'/agent/ticket/' + n.id}>{n.priority}</TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </div>
+          </TableToolBar>
+          <div className={classes.tableResponsive}>
+            <Table className={classes.table} aria-labelledby="tableTitle">
+              <TableHeader
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={this.handleSelectAllClick}
+                onRequestSort={this.handleRequestSort}
+                rowCount={tableData.length}
+                rows={tableHead}
+                checkbox={this.props.checkbox}
+              />
+              <TableBody>
+                {stableSort(tableData, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(n => {
+                    const isSelected = this.isSelected(n[tableHead[0].id]);
+                    return (
+                      <TableRow
+                        key={n[tableHead[0].id]}
+                        onClick={() => this.props.onTableRowClick(n[tableHead[0].id])}
+                      >
+                        {this.props.checkbox ? 
+                        <TableCell padding="checkbox" >
+                          <Checkbox checked={isSelected} onChange={() => this.onSelectedChange(n.id)} color='default' />
+                        </TableCell>
+                        : null}
+                        {tableHead.map(head => {
+                          return (
+                            <TableCell className={classes.tableCell} padding="none" style={{ textDecoration: 'none' }} component={Link} to={linkTo + n.id}>{n[head.id]}</TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </div>
+        </CardBody>
       </Card>
     );
   }
@@ -203,8 +196,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    
+
   };
 };
 
-export default withStyles(styles)(connect(mapStateToProps ,mapDispatchToProps)(EnhancedTable));
+export default withStyles(tableStyle)(connect(mapStateToProps, mapDispatchToProps)(EnhancedTable));
