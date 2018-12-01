@@ -6,7 +6,7 @@ exports.loadAll = function() {
 	return db.load(sql);
 }
 
-exports.loadOne = function(c) {
+exports.loadOne = function(id) {
 	var sql = `select * from staff where isDelete = 0 and id = ${id}`;
 	return db.load(sql);
 }
@@ -18,27 +18,11 @@ exports.login = function(c) {
 }
 
 exports.add = function(c) {
-	var sql = `insert into staff(username,password,fullname,userType,isDelete) values('${c.username}','${c.password}','${c.fullname}',${c.userType},${c.isDelete})`;
+	var sql = `insert into staff(username,password,fullname,userType,isDelete,phone,dob) values('${c.username}','${c.password}','${c.fullname}',${c.userType},${c.isDelete},'${c.phone}','${c.dob}')`;
 	return db.write(sql);
 }
 
 exports.delete = function(id) {
 	var sql = `delete from staff where id = ${id}`;
-	return db.write(sql);
-}
-exports.getRefreshToken = function(rows) {
-	var sql = `select * from token where id_user = ${rows[0].id}`;
-	return db.write(sql);
-}
-exports.deleteRefreshToken = function(id) {
-	var sql = `delete * from token where id_user = ${id}`;
-	return db.write(sql);
-}
-exports.addRefreshToken = function(c) {
-	var sql = `insert into token(id_user,refresh_token,isFrist) values('${c.id_user}','${c.refresh_token}',${c.isFrist})`;
-	return db.write(sql);
-}
-exports.getRefreshTokenByToken = function(token) {
-	var sql = `select * from token where refresh_token = ${token}`;
 	return db.write(sql);
 }

@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var randomstring = require("randomstring");
 var socket=require('../app.js');
 var userRepo = require('../repos/UserRepos.js');
+var tokenRepo = require('../repos/TokenRepos.js');
 
 exports.generateToken = function(user) {
     var user_token={
@@ -31,7 +32,7 @@ var generateTokens = function(user) {
     });
 }
 var createNewToken=function(ref_token,req,res,next){
-    userRepo.getRefreshTokenByToken(ref_token)
+    tokenRepo.getRefreshTokenByToken(ref_token)
     .then(rows => {
       if(rows.length>0)
       {
@@ -67,7 +68,7 @@ exports.checkAccessToken = function(req,res,next){
             if(err){
                 if(err.message==='jwt expired')
                 {
-                  console.log(ref_token);
+                  console.log("jwt expired");
                   createNewToken(ref_token,req,res,next);
                 }else{
                   res.statusCode=403;

@@ -1,5 +1,6 @@
 var token=require('../utils/Utils.js');
 var userRepo = require('../repos/UserRepos.js');
+var tokenRepo = require('../repos/TokenRepos.js');
 var md5=require('crypto-js/md5');
 // lay danh sach user
 exports.showAll = function(req,res) {
@@ -17,13 +18,34 @@ exports.showAll = function(req,res) {
 		res.statusCode = 500;
 		res.json({
 			returnCode:0,
-			message:"get staff error"
+			message:"get staff error",
+			error:err
 		});
 	})
 };
 
 exports.getUser = function(req,res) {
-	res.json(req.user_token);
+	var id_user=req.body.id;
+	userRepo.loadOne(id_user)
+	.then(rows=>{
+		if(rows.length>0)
+		{
+			res.statusCode = 201;
+			res.json({
+				returnCode:1,
+				message:"get user susscess",
+				user:rows[0]
+			});
+		}
+	})
+	.catch(err=>{
+		res.json({
+				returnCode:0,
+				message:"get user error",
+				error:err	
+			});
+	});
+	//res.json(req.user_token);
 };
 
 exports.login = function(req,res) {
@@ -33,22 +55,24 @@ exports.login = function(req,res) {
 	.then(rows => {
 		if(rows.length>0)
 		{
-			userRepo.getRefreshToken(rows)
+			tokenRepo.getRefreshToken(rows)
 			.then(data=>{
 				if(data.length>0){
 					console.log(data);
 					var acToken=token.generateToken(rows[0]);
-					var rfToken=token.createRefreshToken(rows[0].username);
-
-					res.statusCode = 201;
-					res.json({
-						returnCode:1,
-			            message:"login susscess",
-						userId:rows[0].id,
+                    
+                    var user={
+                    	userId:rows[0].id,
 						username:rows[0].username,
 						userType:rows[0].userType,
 						access_token:acToken,
 						refresh_token:data[0].refresh_token
+                    }
+					res.statusCode = 201;
+					res.json({
+						returnCode:1,
+			            message:"login susscess",
+						user:user
 					});
 				}
 				else
@@ -56,19 +80,22 @@ exports.login = function(req,res) {
 					var acToken=token.generateToken(rows[0]);
 					var rfToken=token.createRefreshToken(rows[0].username);
 					var nd5_rfToken=md5(rfToken);
-
-					res.statusCode = 201;
-					res.json({
-						returnCode:1,
-			            message:"login susscess",
-						userId:rows[0].id,
+                    
+                    var user1={
+                    	userId:rows[0].id,
 						username:rows[0].username,
 						userType:rows[0].userType,
 						access_token:acToken,
 						refresh_token:nd5_rfToken.toString()
+                    }
+					res.statusCode = 201;
+					res.json({
+						returnCode:1,
+			            message:"login susscess",
+						user:user1
 					});
 
-					userRepo.addRefreshToken({
+					tokenRepo.addRefreshToken({
 						id_user:rows[0].id,
 						refresh_token:nd5_rfToken,
 						isFrist:1
@@ -91,7 +118,11 @@ exports.login = function(req,res) {
 	.catch(err => {
 		console.log(err);
 		res.statusCode = 500;
-		res.end('View error log on server console');
+		res.json({
+				returnCode:0,
+			    message:"login error",
+			    error:err
+			});
 	})
 };
 
@@ -111,7 +142,9 @@ exports.register = function(req,res) {
 		res.statusCode = 500;
 		res.json({
 			returnCode:0,
-			msg: 'register error'
+			msg: 'register error',
+			error:err
 		});
 	})
 };
+
