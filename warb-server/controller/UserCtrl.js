@@ -1,4 +1,4 @@
-var token=require('../utils/Utils.js');
+var tokenCtrl=require('../controller/TokenCtrl.js');
 var userRepo = require('../repos/UserRepos.js');
 var tokenRepo = require('../repos/TokenRepos.js');
 var md5=require('crypto-js/md5');
@@ -59,7 +59,7 @@ exports.login = function(req,res) {
 			.then(data=>{
 				if(data.length>0){
 					console.log(data);
-					var acToken=token.generateToken(rows[0]);
+					var acToken=tokenCtrl.generateToken(rows[0]);
                     
                     var user={
                     	userId:rows[0].id,
@@ -77,8 +77,8 @@ exports.login = function(req,res) {
 				}
 				else
 				{
-					var acToken=token.generateToken(rows[0]);
-					var rfToken=token.createRefreshToken(rows[0].username);
+					var acToken=tokenCtrl.generateToken(rows[0]);
+					var rfToken=tokenCtrl.createRefreshToken(rows[0].username);
 					var nd5_rfToken=md5(rfToken);
                     
                     var user1={
@@ -111,7 +111,7 @@ exports.login = function(req,res) {
 			res.statusCode = 201;
 			res.json({
 				returnCode:0,
-			    message:"login error"
+			    message:"login không thanh cong"
 			});
 		}
 	})
