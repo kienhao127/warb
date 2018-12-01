@@ -25,7 +25,7 @@ const Sidebar = ({ ...props }) => {
   const { classes, color, logo, image, logoText, routes } = props;
   var links = (
     <List className={classes.list}>
-     <ListItem button className={classes.itemLink + " " + classes.activePro} component={Link} to={'/'} onClick={() => sessionStorage.removeItem('token')}>
+      <ListItem button className={classes.itemLink + " " + classes.activePro} component={Link} to={'/'} onClick={() => sessionStorage.removeItem('token')}>
         <ListItemIcon className={classes.itemIcon}>
           <Logout />
         </ListItemIcon>
@@ -53,27 +53,43 @@ const Sidebar = ({ ...props }) => {
           [" " + classes.whiteFont]: activeRoute(prop.path)
         });
         return (
-          <NavLink
-            to={prop.path}
-            className={activePro + classes.item}
-            activeClassName="active"
-            key={key}
-          >
-            <ListItem button className={classes.itemLink + listItemClasses}>
+          prop.icon === '' ?
+            <ListItem className={classes.itemLink + listItemClasses}>
               <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
                 {typeof prop.icon === "string" ? (
                   <Icon>{prop.icon}</Icon>
                 ) : (
-                  <prop.icon />
-                )}
+                    <prop.icon />
+                  )}
               </ListItemIcon>
               <ListItemText
                 primary={prop.sidebarName}
-                className={classes.itemText + whiteFontClasses}
+                style={{fontFamily: 'Roboto-Medium', fontSize: 20, color: '#FFFFFF'}}
                 disableTypography={true}
               />
             </ListItem>
-          </NavLink>
+            :
+            <NavLink
+              to={prop.path}
+              className={activePro + classes.item}
+              activeClassName="active"
+              key={key}
+            >
+              <ListItem className={classes.itemLink + listItemClasses}>
+                <ListItemIcon className={classes.itemIcon + whiteFontClasses}>
+                  {typeof prop.icon === "string" ? (
+                    <Icon>{prop.icon}</Icon>
+                  ) : (
+                      <prop.icon />
+                    )}
+                </ListItemIcon>
+                <ListItemText
+                  primary={prop.sidebarName}
+                  className={classes.itemText + whiteFontClasses}
+                  disableTypography={true}
+                />
+              </ListItem>
+            </NavLink>
         );
       })}
     </List>

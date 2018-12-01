@@ -52,8 +52,19 @@ const tableStyle = theme => ({
   },
   tableResponsive: {
     width: "100%",
-    marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
+  },
+  tablePagination:{
+    flex: '1 1 50%',
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none"
   }
 });
 
