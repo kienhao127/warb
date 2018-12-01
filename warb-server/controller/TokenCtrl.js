@@ -60,6 +60,7 @@ var createNewToken=function(ref_token,req,res,next){
     })
 }
 //kiem tra token cua user co hop le ko
+var arr=["abc"];
 exports.checkAccessToken = function(req,res,next){
     var token=req.body.access_token;
     var ref_token=req.body.refresh_token.toString();
@@ -68,8 +69,18 @@ exports.checkAccessToken = function(req,res,next){
             if(err){
                 if(err.message==='jwt expired')
                 {
-                  console.log("jwt expired");
-                  createNewToken(ref_token,req,res,next);
+                  var check=arr.indexOf(token);
+                  if(check>0)
+                  {
+                    res.json({
+                      returnCode:0,
+                      msg:'token jwt expired'
+                    });
+                  }else{
+                    arr.push(token);
+                    console.log("jwt expired");
+                    createNewToken(ref_token,req,res,next);
+                  }  
                 }else{
                   res.statusCode=403;
                   res.json({

@@ -111,7 +111,7 @@ exports.login = function(req,res) {
 			res.statusCode = 201;
 			res.json({
 				returnCode:0,
-			    message:"login không thanh cong"
+			    message:"username or password INVALID"
 			});
 		}
 	})
