@@ -27,7 +27,7 @@ class ManageRequestView extends React.Component {
     // const { classes } = this.props;
     return (
       <Table
-        tableTitle={''}
+        tableTitle={'DANH SÁCH CHUYẾN ĐI'}
         tableTitleSecondary={this.state.tableTitleSecondary}
         tableHead={tableHead}
         tableData={this.state.tableData}
@@ -37,15 +37,7 @@ class ManageRequestView extends React.Component {
 }
 
 const styles = {
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none"
-  }
+  
 };
 
 export default withStyles(styles)(ManageRequestView);

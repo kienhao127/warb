@@ -2,6 +2,9 @@ import React from "react";
 import './Login.css';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from "react-redux";
+import { login } from "../../store/actions/user";
+import { Typography } from "@material-ui/core";
 
 class Login extends React.Component {
   constructor(props) {
@@ -10,6 +13,8 @@ class Login extends React.Component {
     this.state = {
       username: '',
       password: '',
+
+      loginError: '',
     };
   }
   
@@ -21,7 +26,23 @@ class Login extends React.Component {
   };
 
   onLogin = (username, password) => {
-    this.props.history.push('/dashboard')
+    this.props.doLogin(username, password)
+    .then(resJson => {
+      if (resJson.returnCode === 1){
+        this.setState({
+          loginError: ''
+        })
+        if (resJson.user.userType !== 4){
+          this.props.history.push('/dashboard')
+        } else {
+          this.props.history.push('/driver')
+        }
+      } else {
+        this.setState({
+          loginError: 'Tài khoản hoặc mật khẩu không chính xác'
+        })
+      }
+    })
   }
 
   render() {
@@ -52,6 +73,11 @@ class Login extends React.Component {
                 margin="normal" />
           </div>
 
+          {this.state.loginError !== ''
+          ?
+          <Typography  style={{ color: 'red', fontFamily: 'Roboto-Light', fontSize: 12 }}>{this.state.loginError}</Typography>
+          : null}
+
           <div className="button login">
             <button onClick={()=>this.onLogin(this.state.username, this.state.password)}><span>ĐĂNG NHẬP</span> <i className="fa fa-check"></i></button>
           </div>
@@ -67,4 +93,11 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Login);
+
+const mapDispatchToProps = dispatch => {
+  return {
+      doLogin: (username, password) => dispatch(login(username, password))
+  };
+};
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(Login));

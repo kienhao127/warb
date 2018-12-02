@@ -18,9 +18,9 @@ function fetchApi(url, method, data) {
         });
 }
 
-export function loginApi(email, password) {
+export function loginApi(username, password) {
     var body = {
-        email: email,
+        username: username,
         password: password
     }
     return fetchApi('user/login', 'POST', body);
