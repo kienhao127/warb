@@ -22,6 +22,15 @@ exports.add = function(c) {
 	return db.write(sql);
 }
 
+// exports.delete = function(id) {
+// 	var sql = `delete from staff where id = ${id}`;
+// 	return db.write(sql);
+// }
+
+// exports.delete = function(id) {
+// 	var sql = `delete from staff where id = ${id}`;
+// 	return db.write(sql);
+// }
 exports.delete = function(id) {
 	var sql = `delete from staff where id = ${id}`;
 	return db.write(sql);
