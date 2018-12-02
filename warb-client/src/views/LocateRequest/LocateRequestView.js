@@ -24,31 +24,35 @@ class LocateRequestView extends Component {
     })
   }
   render() {
+    const { lat, lng } = this.state
     return (
-      // Important! Always set the container height explicitly
-      // <div style={{ flex: 1, backgroundColor: "red" }} >
-      <GridContainer>
+      <GridContainer >
+        {/* <Card>
+
+
+        </Card> */}
         <Card>
           <CardHeader color="primary">
             <h2>THÔNG TIN ĐỊA CHỈ: {this.state.address}</h2>
           </CardHeader>
-
+          <div style={{ flex: 1, height: window.innerHeight }}>
+            <Map
+              google={this.props.google}
+              zoom={14}
+              initialCenter={{
+                lat: lat,
+                lng: lng
+              }}
+              style={styles.mapStyle}
+              onClick={this.mapClicked.bind(this)}
+            >
+              <Marker onClick={() => { alert(1) }}
+                name={'Current location'}
+                position={{ lat: lat, lng: lng }}
+              />
+            </Map>
+          </div>
         </Card>
-        <Map
-          google={this.props.google}
-          zoom={14}
-          initialCenter={{
-            lat: 10.7629123,
-            lng: 106.6734333
-          }}
-          style={styles.mapStyle}
-          onClick={this.mapClicked.bind(this)}
-        >
-          <Marker onClick={() => { alert(1) }}
-            name={'Current location'}
-            position={{ lat: this.state.lat, lng: this.state.lng }}
-          />
-        </Map>
       </GridContainer>
       // </div>
     );
@@ -57,6 +61,7 @@ class LocateRequestView extends Component {
 
 const styles = {
   mapStyle: {
+    flex: 1,paddingBottom:50
   }
 };
 export default GoogleApiWrapper({
