@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Dashboard from './layouts/Dashboard/Dashboard'
-import Login from './views/Login/Login'
+import Login from './views/Login/login'
 import DriverView from './views/Driver/DriverView'
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 
