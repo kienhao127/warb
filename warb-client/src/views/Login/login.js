@@ -26,24 +26,24 @@ class Login extends React.Component {
   };
 
   onLogin = (username, password) => {
-    this.props.history.push('/dashboard')
-    // this.props.doLogin(username, password)
-    // .then(resJson => {
-    //   if (resJson.returnCode === 1){
-    //     this.setState({
-    //       loginError: ''
-    //     })
-    //     if (resJson.user.userType !== 4){
-    //       this.props.history.push('/dashboard')
-    //     } else {
-    //       this.props.history.push('/driver')
-    //     }
-    //   } else {
-    //     this.setState({
-    //       loginError: 'Tài khoản hoặc mật khẩu không chính xác'
-    //     })
-    //   }
-    // })
+    // this.props.history.push('/dashboard')
+    this.props.doLogin(username, password)
+    .then(resJson => {
+      if (resJson.returnCode === 1){
+        this.setState({
+          loginError: ''
+        })
+        if (resJson.user.userType !== 4){
+          this.props.history.push('/dashboard')
+        } else {
+          this.props.history.push('/driver')
+        }
+      } else {
+        this.setState({
+          loginError: 'Tài khoản hoặc mật khẩu không chính xác'
+        })
+      }
+    })
   }
 
   render() {
