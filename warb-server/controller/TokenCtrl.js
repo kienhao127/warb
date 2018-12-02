@@ -13,7 +13,9 @@ exports.generateToken = function(user) {
         expiresIn: 60*5 // expires in 1 week
     });
 }
-
+exports.deleteToken=function(res,rep){
+ 
+}
 //tao chuoi Refreshtoken va ma hoa md5
 exports.createRefreshToken=function(us){
   var str=randomstring.generate({
