@@ -24,6 +24,13 @@ exports.createRefreshToken=function(us){
 });
   return str+us;
 }
+exports.createRefreshToken2=function(us){
+  var str=randomstring.generate({
+    length: 30,
+    charset: 'alphabetic'
+});
+  return str+us;
+}
 
 var generateTokens = function(user) {
     var user_token={
