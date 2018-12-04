@@ -4,7 +4,7 @@ express = require('express');
 
 var router = express.Router();
 
-router.route('/')
+router.route('/delete')
 .get(token.deleteToken)
 
 module.exports = router;

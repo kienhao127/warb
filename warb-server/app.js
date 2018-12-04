@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // thiet lap router
 app.use('/user', require('./router/UserRouter.js'));
+app.use('/refreshToken', require('./router/TokenRouter.js'));
+app.use('/map', require('./router/MapRouter.js'));
 
 
 // run server
@@ -28,7 +30,7 @@ app.get("/",(req,res)=>{
 
 
 //SOCKET
-var socketClient;
+
 var arr=[];
 var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
