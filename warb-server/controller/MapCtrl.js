@@ -12,6 +12,7 @@ exports.getLatLong = function(req,res) {
    		lat:body.results[0].geometry.location.lat,
    		lng:body.results[0].geometry.location.lng
    	}
+   //	res.json(body);
    	res.json({
 			returnCode:1,
 			message:"get Lat Lng success!",
