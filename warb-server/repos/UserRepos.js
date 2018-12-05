@@ -11,6 +11,17 @@ exports.loadOne = function(id) {
 	return db.load(sql);
 }
 
+exports.loadForType = function(difriend) {
+	if(difriend===0)
+	{
+		var sql = `select * from staff where isDelete = 0 and userType = 4`;
+	    return db.load(sql);
+	}else{
+		var sql = `select * from staff where isDelete = 0 and userType != 4`;
+	    return db.load(sql);
+	}
+	
+}
 exports.login = function(c) {
 	var sql = `select * from staff where username = '${c.username}' and password = '${c.password}'`;
 	console.log(sql);
@@ -23,6 +34,10 @@ exports.add = function(c) {
 }
 
 exports.delete = function(id) {
+	var sql = `delete from staff where id = ${id}`;
+	return db.write(sql);
+}
+exports.loadDriver = function(id) {
 	var sql = `delete from staff where id = ${id}`;
 	return db.write(sql);
 }

@@ -48,6 +48,29 @@ exports.getUser = function(req,res) {
 	//res.json(req.user_token);
 };
 
+exports.getUserForType = function(req,res) {
+	var dif=req.body.dif;
+	userRepo.loadForType(dif)
+	.then(rows=>{
+		if(rows.length>0)
+		{
+			res.statusCode = 201;
+			res.json({
+				returnCode:1,
+				message:"get susscess",
+				object:rows
+			});
+		}
+	})
+	.catch(err=>{
+		res.json({
+				returnCode:0,
+				message:"get error",
+				error:err	
+			});
+	});
+	//res.json(req.user_token);
+};
 exports.login = function(req,res) {
 	var c=req.body;
 
