@@ -61,28 +61,10 @@ exports.getUserByToken= function(req,res){
             res.json({
 				returnCode:1,
 				message:"lấy danh user theo refresh token thành công !! ",
-				user:user
+				user:user.user
 			   });
     	}
     })
-	// userRepo.getUserByRefreshToken(reToken)
- //        .then(rows=>{
- //            if(rows.length>0)
- //            {
- //                res.json({
-	// 			returnCode:1,
-	// 			message:"lấy danh user theo refresh token thành công !! ",
-	// 			object:rows
-	// 		   });
- //            }
- //        })
- //        .catch(error=>{
- //                res.json({
-	// 			returnCode:0,
-	// 			message:"lấy danh user theo refresh token thất bại !!",
-	// 			error:error	
-	// 		});
- //        });
 }
 exports.getUserForType = function(req,res) {
 	var dif=req.body.dif;
