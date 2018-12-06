@@ -26,7 +26,6 @@ class Login extends React.Component {
   };
 
   onLogin = (username, password) => {
-    // this.props.history.push('/dashboard')
     this.props.doLogin(username, password)
     .then(resJson => {
       if (resJson.returnCode === 1){
@@ -46,6 +45,13 @@ class Login extends React.Component {
     })
   }
 
+  componentDidMount(){
+    console.log("access_token", localStorage.getItem('access_token'));
+    if (localStorage.getItem('access_token') !== null){
+      this.props.history.push('/dashboard')
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -54,7 +60,7 @@ class Login extends React.Component {
           <div className="title">Đăng nhập</div>
           <div>
             <TextField
-              id="standard-name"
+              id="username"
               label="Tên đăng nhập"
               className={classes.textField}
               value={this.state.username}
@@ -64,7 +70,7 @@ class Login extends React.Component {
 
           <div>
             <TextField
-                id="standard-name"
+                id="password"
                 label="Mật khẩu"
                 type='password'
                 style={{fontSize: 100}}

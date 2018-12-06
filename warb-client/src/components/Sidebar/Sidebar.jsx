@@ -25,7 +25,7 @@ const Sidebar = ({ ...props }) => {
   const { classes, color, logo, image, logoText, routes } = props;
   var links = (
     <List className={classes.list}>
-      <ListItem button className={classes.itemLink + " " + classes.activePro} component={Link} to={'/'} onClick={() => sessionStorage.removeItem('token')}>
+      <ListItem button className={classes.itemLink + " " + classes.activePro} component={Link} to={'/login'} onClick={() => {localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token');}}>
         <ListItemIcon className={classes.itemIcon}>
           <Logout />
         </ListItemIcon>

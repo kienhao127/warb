@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 import GridContainer from "../../components/Grid/GridContainer";
-import GridItem from "../../components/Grid/GridItem";
-import Button from "components/CustomButtons/Button.jsx";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
-import CardBody from "components/Card/CardBody.jsx";
-import { TextField, Typography } from "@material-ui/core";
 
 class LocateRequestView extends Component {
   constructor(props) {
@@ -43,6 +39,7 @@ class LocateRequestView extends Component {
                 lat: lat,
                 lng: lng
               }}
+              gestureHandling={'cooperative'}
               style={styles.mapStyle}
               onClick={this.mapClicked.bind(this)}
             >

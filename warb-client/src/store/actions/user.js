@@ -12,8 +12,10 @@ export const login = (username, password) => {
                 .then((responseJson) => {
                     console.log('login api response: ', responseJson);
                     if (responseJson.returnCode === 1) {
-                        var token = responseJson.token;
-                        sessionStorage.setItem('token', token);
+                        var access_token = responseJson.user.access_token;
+                        var refresh_token = responseJson.user.refresh_token;
+                        localStorage.setItem('access_token', access_token);
+                        localStorage.setItem('refresh_token', refresh_token);
                         var user = responseJson.user;
                         dispatch(saveProfile(user));
                     }
