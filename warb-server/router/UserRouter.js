@@ -16,6 +16,9 @@ router.route('/register')
 router.route('/getUser') 
 .post(token.checkAccessToken,userCtrl.getUser);
 
+router.route('/getUserByToken') 
+.post(token.checkAccessToken,userCtrl.getUserByToken);
+
 router.route('/getUserForType') 
 .post(token.checkAccessToken,userCtrl.getUserForType);
 

@@ -47,7 +47,27 @@ exports.getUser = function(req,res) {
 	});
 	//res.json(req.user_token);
 };
-
+exports.getUserByToken= function(req,res){
+	var reToken=req.body.refresh_token;
+	userRepo.getUserByRefreshToken(reToken)
+        .then(rows=>{
+            if(rows.length>0)
+            {
+                res.json({
+				returnCode:1,
+				message:"lấy danh user theo refresh token thành công !! ",
+				object:rows
+			   });
+            }
+        })
+        .catch(error=>{
+                res.json({
+				returnCode:0,
+				message:"lấy danh user theo refresh token thất bại !!",
+				error:error	
+			});
+        });
+}
 exports.getUserForType = function(req,res) {
 	var dif=req.body.dif;
 	userRepo.loadForType(dif)

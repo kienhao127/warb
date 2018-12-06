@@ -7,6 +7,7 @@ exports.loadAll = function() {
 }
 
 exports.loadOne = function(id) {
+	console.log("id load one :"+id);
 	var sql = `select * from staff where isDelete = 0 and id = ${id}`;
 	return db.load(sql);
 }
@@ -21,6 +22,11 @@ exports.loadForType = function(difriend) {
 	    return db.load(sql);
 	}
 	
+}
+exports.getUserByRefreshToken = function(reToken) {
+	var sql = `select * from staff st ,token tk where tk.refresh_token = '${reToken}' and st.id=tk.id_user`;
+	console.log(sql);
+	return db.load(sql);
 }
 exports.login = function(c) {
 	var sql = `select * from staff where username = '${c.username}' and password = '${c.password}'`;
