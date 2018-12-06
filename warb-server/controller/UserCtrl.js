@@ -50,21 +50,35 @@ exports.getUser = function(req,res) {
 };
 exports.getUserByToken= function(req,res){
 	var reToken=req.body.access_token;
-    jwt.verify(reToken, process.env.JWT_SECRET, function(err, user) {
-    	if(err){
-    		res.json({
-				returnCode:0,
-				message:"lấy danh user theo refresh token thất bại !!",
-				error:err	
-			});
-    	}else{
-            res.json({
+	var new_token= req.new_token;
+	jwt.verify(reToken, process.env.JWT_SECRET, function(err, user) {
+		if(err){
+			if(err.message ==='jwt expired')
+			{
+				jwt.verify(new_token, process.env.JWT_SECRET, function(err, users) {
+					if(users){
+						res.json({
+							returnCode:1,
+							message:"lấy danh user theo refresh token thành công !! ",
+							user:users.user
+						});
+					}
+				})
+			}else {
+				res.json({
+					returnCode:0,
+					message:"lấy danh user theo refresh token thất bại !!",
+					error:err	
+				});
+			}
+		}else{
+			res.json({
 				returnCode:1,
 				message:"lấy danh user theo refresh token thành công !! ",
 				user:user.user
-			   });
-    	}
-    })
+			});
+		}
+	})
 }
 exports.getUserForType = function(req,res) {
 	var dif=req.body.dif;

@@ -34,6 +34,7 @@ app.get("/",(req,res)=>{
 var arr=[];
 var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
+    socket.user={id:0};
     arr.push(socket);
     socket.re_status=[{key:0}];
     console.log('a user connected id= '+socket.id);

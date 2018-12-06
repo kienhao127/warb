@@ -47,6 +47,7 @@ var createNewToken=function(ref_token,req,res,next){
             }
             console.log(result);
             req.user_token=user_token;
+            req.new_token=acToken;
             next();
         })
         .catch(err=>{console.log("không lấy dc loadOne staff by id "+err)});
