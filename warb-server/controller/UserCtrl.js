@@ -2,6 +2,7 @@ var tokenCtrl=require('../controller/TokenCtrl.js');
 var userRepo = require('../repos/UserRepos.js');
 var tokenRepo = require('../repos/TokenRepos.js');
 var md5=require('crypto-js/md5');
+var jwt = require('jsonwebtoken');
 // lay danh sach user
 exports.showAll = function(req,res) {
 	userRepo.loadAll()
@@ -48,25 +49,40 @@ exports.getUser = function(req,res) {
 	//res.json(req.user_token);
 };
 exports.getUserByToken= function(req,res){
-	var reToken=req.body.refresh_token;
-	userRepo.getUserByRefreshToken(reToken)
-        .then(rows=>{
-            if(rows.length>0)
-            {
-                res.json({
-				returnCode:1,
-				message:"lấy danh user theo refresh token thành công !! ",
-				object:rows
-			   });
-            }
-        })
-        .catch(error=>{
-                res.json({
+	var reToken=req.body.access_token;
+    jwt.verify(reToken, process.env.JWT_SECRET, function(err, user) {
+    	if(err){
+    		res.json({
 				returnCode:0,
 				message:"lấy danh user theo refresh token thất bại !!",
-				error:error	
+				error:err	
 			});
-        });
+    	}else{
+            res.json({
+				returnCode:1,
+				message:"lấy danh user theo refresh token thành công !! ",
+				user:user
+			   });
+    	}
+    })
+	// userRepo.getUserByRefreshToken(reToken)
+ //        .then(rows=>{
+ //            if(rows.length>0)
+ //            {
+ //                res.json({
+	// 			returnCode:1,
+	// 			message:"lấy danh user theo refresh token thành công !! ",
+	// 			object:rows
+	// 		   });
+ //            }
+ //        })
+ //        .catch(error=>{
+ //                res.json({
+	// 			returnCode:0,
+	// 			message:"lấy danh user theo refresh token thất bại !!",
+	// 			error:error	
+	// 		});
+ //        });
 }
 exports.getUserForType = function(req,res) {
 	var dif=req.body.dif;
