@@ -25,3 +25,20 @@ export function loginApi(username, password) {
     }
     return fetchApi('user/login', 'POST', body);
 }
+
+export function getUserByTokenApi(access_token, refresh_token){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token
+    }
+    return fetchApi('user/getUserByToken', 'POST', body);
+}
+
+export function getUserByIdApi(access_token, refresh_token, id){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        id: id
+    }
+    return fetchApi('user/getUser', 'POST', body);
+}

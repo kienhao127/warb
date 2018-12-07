@@ -71,7 +71,7 @@ const dashboardRoutes = [
     icon: Settings,
     component: SettingsView
   },
-  { redirect: true, path: "/", to: "/dashboard/receiverequest", navbarName: "Redirect" }
+  { redirect: true, path: "/dashboard", to: "/dashboard/receiverequest", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;

@@ -1,6 +1,6 @@
 import { SAVE_PROFILE } from './actiontype';
 import {
-    loginApi
+    loginApi, getUserByTokenApi, getUserByIdApi
 } from '../../AppApi';
 var md5 = require('md5');
 
@@ -19,6 +19,7 @@ export const login = (username, password) => {
                         var user = responseJson.user;
                         dispatch(saveProfile(user));
                     }
+                    dispatch(saveProfile(null));
                     resolve(responseJson);
                 })
                 .catch((error) => {
@@ -26,6 +27,46 @@ export const login = (username, password) => {
                 });
         })
         return promise;
+    }
+}
+
+export const getUserByToken = () => {
+    return (dispatch) => {
+        const promise = new Promise((resolve, reject) => {
+            var access_token = localStorage.getItem('access_token');
+            var refresh_token = localStorage.getItem('refresh_token');
+            getUserByTokenApi(access_token, refresh_token)
+                .then((responseJson) => {
+                    console.log('getUserByToken api response: ', responseJson);
+                    if (responseJson.returnCode === 1) {
+                        var user = responseJson.user;
+                        dispatch(saveProfile(user));
+                    }
+                    resolve(responseJson);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        })
+        return promise;
+    }
+}
+
+export const getUserInfo = (id) => {
+    return (dispatch) => {
+        var access_token = localStorage.getItem('access_token');
+        var refresh_token = localStorage.getItem('refresh_token');
+        getUserByIdApi(access_token, refresh_token, id)
+            .then((responseJson) => {
+                console.log('getUserInfo api response: ', responseJson);
+                if (responseJson.returnCode === 1) {
+                    var user = responseJson.user;
+                    dispatch(saveProfile(user));
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 }
 

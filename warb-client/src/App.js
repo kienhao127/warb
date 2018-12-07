@@ -1,87 +1,111 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Dashboard from './layouts/Dashboard/Dashboard'
 import Login from './views/Login/login'
 import DriverView from './views/Driver/DriverView'
-import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import './App.css';
+import io from 'socket.io-client';
+import { getUserByToken } from './store/actions/user';
+import { connect } from "react-redux";
+import Loading from './components/Loading/Loading';
+const socket = io('http://localhost:8888')
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoading: true,
       user: null
     }
+
+    socket.on('token', data => {
+      localStorage.setItem('access_token', data);
+    });
   }
 
-  componentDidMount(){
-    if (localStorage.getItem('access_token') !== null){
-      //call api get user info from token
-      this.setState({
-        isLoading: false
+  componentDidMount() {
+    //gửi refresh token lên server để nhận biết user
+    if (localStorage.getItem('refresh_token') !== null) {
+      socket.emit('send_refresh_token', localStorage.getItem('refresh_token'));
+    }
+    if (localStorage.getItem('access_token') !== null) {
+      this.props.doGetUserByToken()
+      .then(resJson => {
+        console.log("doGetUserByToken", resJson);
+        if (resJson !== undefined){
+          var user = resJson.user;
+          this.setState({
+            user: user,
+          })
+        }
       })
     }
   }
 
   render() {
-    if (localStorage.getItem('access_token') !== null){
-      // if (this.state.isLoading){ //check is user null
-      //   return (
-      //     <div class="wrap" style={{backgroundColor: '#FFFFFF', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex'}}>
-      //       <div class="loading">
-      //         <div class="bounceball"></div>
-      //         <div class="text">ĐANG CHUYỂN TRANG...</div>
-      //       </div>
-      //     </div>
-      //   );
-      // } else {
-        //user.Type === 4 và user.Type !=== 4
-
-        // return (
-        //   <MuiThemeProvider theme={theme}>
-        //     <Switch>
-        //       <Route path={"/dashboard"} component={Dashboard} />
-        //       <Route path={"/driver"} component={DriverView} />
-        //       <Route path={"/login"} component={Login} />
-        //       <Redirect from={"/"} to={"/driver"} />
-        //     </Switch>
-        //   </MuiThemeProvider>
-        // );
+    if (localStorage.getItem('access_token') !== null && this.state.user !== null) {
+      if (this.state.user === null) {
         return (
-          <MuiThemeProvider theme={theme}>
-            <Switch>
-              <Route path={"/dashboard"} component={Dashboard} />
-              <Route path={"/driver"} component={DriverView} />
-              <Route path={"/login"} component={Login} />
-              <Redirect from={"/"} to={"/dashboard"} />
-            </Switch>
-          </MuiThemeProvider>
+          <Loading backgroundColor="#FFFFFF" loadingText={"ĐANG CHUYỂN TRANG..."}/>
         );
-      // }
+      } else {
+        if (this.state.user.userType === 4)
+          return (
+            <MuiThemeProvider theme={theme}>
+              <Switch>
+                <Route path={"/driver"} component={DriverView} />
+                <Route path={"/dashboard"} component={Dashboard} />
+                <Route path={"/"} component={Login} />
+                <Redirect from={"/"} to={"/driver"} />
+              </Switch>
+            </MuiThemeProvider>
+          );
+        else {
+          return (
+            <MuiThemeProvider theme={theme}>
+              <Switch>
+                <Route path={"/dashboard"} component={Dashboard} />
+                <Route path={"/driver"} component={DriverView} />
+                <Route path={"/"} component={Login} />
+                <Redirect from={"/"} to={"/dashboard"} />
+              </Switch>
+            </MuiThemeProvider>
+          );
+        }
+      }
     } else {
       return (
         <MuiThemeProvider theme={theme}>
           <Switch>
             <Route path={"/dashboard"} component={Dashboard} />
             <Route path={"/driver"} component={DriverView} />
-            <Route path={"/login"} component={Login} />
-            <Redirect from={"/"} to={"/login"} />
+            <Route path={"/"} component={Login} />
           </Switch>
         </MuiThemeProvider>
       );
     }
-    
   }
 }
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-        main: '#00bcd4',
+      main: '#00bcd4',
     },
   },
 });
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    userProfile: state.user.profile,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    doGetUserByToken: () => dispatch(getUserByToken()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
