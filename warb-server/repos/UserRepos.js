@@ -11,7 +11,11 @@ exports.loadOne = function(id) {
 	var sql = `select * from staff where isDelete = 0 and id = ${id}`;
 	return db.load(sql);
 }
-
+exports.loadOnebyType = function(type) {
+	
+	var sql = `select * from staff where isDelete = 0 and userType = ${type}`;
+	return db.load(sql);
+}
 exports.loadForType = function(difriend) {
 	if(difriend===0)
 	{
