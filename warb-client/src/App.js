@@ -20,16 +20,16 @@ class App extends Component {
     }
 
     socket.on('token', data => {
-      localStorage.setItem('access_token', data);
+      sessionStorage.setItem('access_token', data);
     });
   }
 
   componentDidMount() {
     //gửi refresh token lên server để nhận biết user
-    if (localStorage.getItem('refresh_token') !== null) {
-      socket.emit('send_refresh_token', localStorage.getItem('refresh_token'));
+    if (sessionStorage.getItem('refresh_token') !== null) {
+      socket.emit('send_refresh_token', sessionStorage.getItem('refresh_token'));
     }
-    if (localStorage.getItem('access_token') !== null) {
+    if (sessionStorage.getItem('access_token') !== null) {
       this.props.doGetUserByToken()
       .then(resJson => {
         console.log("doGetUserByToken", resJson);
@@ -44,7 +44,7 @@ class App extends Component {
   }
 
   render() {
-    if (localStorage.getItem('access_token') !== null && this.state.user !== null) {
+    if (sessionStorage.getItem('access_token') !== null && this.state.user !== null) {
       if (this.state.user === null) {
         return (
           <Loading backgroundColor="#FFFFFF" loadingText={"ĐANG CHUYỂN TRANG..."}/>

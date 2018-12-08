@@ -64,9 +64,9 @@ class Login extends React.Component {
   }
 
   componentDidMount(){
-    console.log("access_token", localStorage.getItem('access_token'));
+    console.log("access_token", sessionStorage.getItem('access_token'));
     //nếu đã có access_token -> navigate đến dashboard/driver (tùy loại người dùng)
-    if (localStorage.getItem('access_token') !== null){
+    if (sessionStorage.getItem('access_token') !== null){
       this.props.history.push('/dashboard')
     }
   }

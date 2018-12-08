@@ -3,7 +3,7 @@ import React from "react";
 class Driver extends React.Component {
 
     componentDidMount() {
-        if (localStorage.getItem('access_token') === null) {
+        if (sessionStorage.getItem('access_token') === null) {
             this.props.history.push('/')
         }
     }

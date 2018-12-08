@@ -53,7 +53,7 @@ class Dashboard extends React.Component {
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
     window.addEventListener("resize", this.resizeFunction);
-    if (localStorage.getItem('access_token') === null){
+    if (sessionStorage.getItem('access_token') === null){
       this.props.history.push('/')
     }
   }

@@ -14,8 +14,8 @@ export const login = (username, password) => {
                     if (responseJson.returnCode === 1) {
                         var access_token = responseJson.user.access_token;
                         var refresh_token = responseJson.user.refresh_token;
-                        localStorage.setItem('access_token', access_token);
-                        localStorage.setItem('refresh_token', refresh_token);
+                        sessionStorage.setItem('access_token', access_token);
+                        sessionStorage.setItem('refresh_token', refresh_token);
                         var user = responseJson.user;
                         dispatch(saveProfile(user));
                     }
@@ -33,8 +33,8 @@ export const login = (username, password) => {
 export const getUserByToken = () => {
     return (dispatch) => {
         const promise = new Promise((resolve, reject) => {
-            var access_token = localStorage.getItem('access_token');
-            var refresh_token = localStorage.getItem('refresh_token');
+            var access_token = sessionStorage.getItem('access_token');
+            var refresh_token = sessionStorage.getItem('refresh_token');
             getUserByTokenApi(access_token, refresh_token)
                 .then((responseJson) => {
                     console.log('getUserByToken api response: ', responseJson);
@@ -54,8 +54,8 @@ export const getUserByToken = () => {
 
 export const getUserInfo = (id) => {
     return (dispatch) => {
-        var access_token = localStorage.getItem('access_token');
-        var refresh_token = localStorage.getItem('refresh_token');
+        var access_token = sessionStorage.getItem('access_token');
+        var refresh_token = sessionStorage.getItem('refresh_token');
         getUserByIdApi(access_token, refresh_token, id)
             .then((responseJson) => {
                 console.log('getUserInfo api response: ', responseJson);
