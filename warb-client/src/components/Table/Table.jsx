@@ -158,7 +158,7 @@ class EnhancedTable extends React.Component {
                     return (
                       <TableRow
                         key={n[tableHead[0].id]}
-                        onClick={() => this.props.onTableRowClick(n[tableHead[0].id])}
+                        onClick={() => this.props.onTableRowClick(n)}
                       >
                         {this.props.checkbox ? 
                         <TableCell padding="checkbox" >

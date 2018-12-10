@@ -42,3 +42,12 @@ export function getUserByIdApi(access_token, refresh_token, id){
     }
     return fetchApi('user/getUser', 'POST', body);
 }
+
+export function getUserForTypeApi(access_token, refresh_token, dif){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        dif: dif
+    }
+    return fetchApi('user/getUserForType', 'POST', body);
+}

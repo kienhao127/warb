@@ -1,6 +1,6 @@
 import { SAVE_PROFILE } from './actiontype';
 import {
-    loginApi, getUserByTokenApi, getUserByIdApi
+    loginApi, getUserByTokenApi, getUserByIdApi, getUserForTypeApi
 } from '../../AppApi';
 var md5 = require('md5');
 
@@ -67,6 +67,24 @@ export const getUserInfo = (id) => {
             .catch((error) => {
                 console.log(error);
             });
+    }
+}
+
+export const getUserForType = (dif) => {
+    return (dispatch) => {
+        const promise = new Promise((resolve, reject) => {
+            var access_token = sessionStorage.getItem('access_token');
+            var refresh_token = sessionStorage.getItem('refresh_token');
+            getUserForTypeApi(access_token, refresh_token, dif)
+                .then((responseJson) => {
+                    console.log('getUserForType api response: ', responseJson);
+                    resolve(responseJson);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        })
+        return promise;
     }
 }
 

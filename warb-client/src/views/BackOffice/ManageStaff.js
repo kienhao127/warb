@@ -1,15 +1,16 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
 import Table from "components/Table/Table.jsx";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 // import Button from "components/CustomButtons/Button.jsx";
 import UserProfile from "components/UserProfile/UserProfile";
+import { getUserForType } from "../../store/actions/user";
+import { connect } from "react-redux";
 
 
-const tableDriverHead = [
-  { id: 'driverId', label: 'Mã tài xế' },
-  { id: 'driverName', label: 'Tên tài xế' },
+const tableHead = [
+  { id: 'id', label: 'Mã nhân viên' },
+  { id: 'fullname', label: 'Tên nhân viên' },
 ];
 
 class ManageStaff extends React.Component {
@@ -18,9 +19,29 @@ class ManageStaff extends React.Component {
 
     this.state = {
       tableTitleSecondary: '',
-      tableDriverData: [],
-      tableTripData: [],
+      tableData: [],
+      userInfo: null,
     };
+  }
+
+  componentDidMount(){
+    this.props.doGetUserForType(1)
+    .then(resJson => {
+      console.log('resJson', resJson);
+      this.setState({
+        tableData: resJson.object,
+        userInfo: resJson.object[0]
+      })
+    })
+    .catch(error =>{
+      console.log('doGetUserForType error', error);
+    })
+  }
+
+  onTableRowClick = (item) => {
+    this.setState({
+      userInfo: item
+    })
   }
 
   render() {
@@ -31,50 +52,27 @@ class ManageStaff extends React.Component {
           <Table
             tableTitle={'DANH SÁCH NHÂN VIÊN'}
             tableTitleSecondary={this.state.tableTitleSecondary}
-            tableHead={tableDriverHead}
-            tableData={this.state.tableDriverData}
+            tableHead={tableHead}
+            tableData={this.state.tableData}
+            onTableRowClick={this.onTableRowClick}
           />
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>
-          <UserProfile />
+          {this.state.userInfo != null
+          ? 
+          <UserProfile userInfo={this.state.userInfo} />
+          :
+          null}
         </GridItem>
       </GridContainer>
     );
   }
 }
 
-const styles = {
-  username: {
-    fontFamily: 'Roboto-Bold',
-    fontSize: 20,
-  },
-  usercategory: {
-    fontFamily: 'Roboto-Light',
-    fontSize: 15,
-  },
-  userInfoLabel: {
-    fontFamily: 'Roboto-Light',
-    fontSize: 14,
-    color: 'gray',
-    marginBottom: 5,
-  },
-  userdob: {
-    fontFamily: 'Roboto-Light',
-    fontSize: 18,
-  },
-  userphone: {
-    fontFamily: 'Roboto-Light',
-    fontSize: 18,
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none"
-  }
+const mapDispatchToProps = dispatch => {
+  return {
+    doGetUserForType: (dif) => dispatch(getUserForType(dif))
+  };
 };
 
-export default withStyles(styles)(ManageStaff);
+export default connect(null, mapDispatchToProps)(ManageStaff);

@@ -4,34 +4,33 @@ import { Typography } from "@material-ui/core";
 import Card from "components/Card/Card.jsx";
 import CardAvatar from "components/Card/CardAvatar.jsx";
 import CardBody from "components/Card/CardBody.jsx";
-import avatar from "assets/img/faces/marc.jpg";
+import moment from 'moment';
+import Avatar from "../Avatar/Avatar";
 
 class UserProfile extends React.Component {
+    
     render() {
-
-    const { classes } = this.props;
+    const { classes, userInfo } = this.props;
         return (
             <Card profile>
                 <CardAvatar profile>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                        <img src={avatar} alt="..." />
-                    </a>
+                    <Avatar content={userInfo.fullname[0]} colorString={userInfo.phone}/>
                 </CardAvatar>
                 <CardBody profile>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography className={classes.username}>Lương Kiên Hào</Typography>
-                            <Typography className={classes.usercategory}>Quản lý</Typography>
+                            <Typography className={classes.username}>{userInfo.fullname}</Typography>
+                            <Typography className={classes.usercategory}>{userInfo.userType}</Typography>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
                             <div style={{ display: 'flex', flexDirection: 'column', marginRight: 10, width: '100%' }}>
                                 <Typography className={classes.userInfoLabel}>Ngày sinh</Typography>
-                                <Typography className={classes.userdob}>1/1/1996</Typography>
+                                <Typography className={classes.userdob}>{moment(userInfo.dob).format('DD/MM/YYYY')}</Typography>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 10, width: '100%' }}>
                                 <Typography className={classes.userInfoLabel}>Số điện thoại</Typography>
-                                <Typography className={classes.userphone}>0912345678</Typography>
+                                <Typography className={classes.userphone}>{userInfo.phone}</Typography>
                             </div>
                         </div>
                     </div>

@@ -3,10 +3,12 @@ import Table from "components/Table/Table.jsx";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import UserProfile from "components/UserProfile/UserProfile";
+import { connect } from "react-redux";
+import { getUserForType } from "../../store/actions/user";
 
 const tableDriverHead = [
-  { id: 'driverId', label: 'Mã tài xế' },
-  { id: 'driverName', label: 'Tên tài xế' },
+  { id: 'id', label: 'Mã tài xế' },
+  { id: 'fullname', label: 'Tên tài xế' },
   { id: 'statusName', label: 'Tình trạng tài xế' },
 ];
 
@@ -24,18 +26,30 @@ class ManageDriver extends React.Component {
 
     this.state = {
       tableTitleSecondary: '',
-      tableDriverData: [
-        { driverId: 1, driverName: 'Nguyễn Văn A' },
-        { driverId: 2, driverName: 'Trần Thị B' },
-      ],
+      tableDriverData: [],
       tableTripData: [],
-      rowId: 0,
+
+      userInfo: null,
     };
   }
 
-  onTableRowClick = (rowId) => {
+  componentDidMount(){
+    this.props.doGetUserForType(0)
+    .then(resJson => {
+      console.log('resJson', resJson);
+      this.setState({
+        tableDriverData: resJson.object,
+        userInfo: resJson.object[0]
+      })
+    })
+    .catch(error =>{
+      console.log('doGetUserForType error', error);
+    })
+  }
+
+  onTableRowClick = (item) => {
     this.setState({
-      rowId: rowId
+      userInfo: item
     })
   }
 
@@ -53,7 +67,11 @@ class ManageDriver extends React.Component {
           />
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>
-          <UserProfile />
+          {this.state.userInfo != null
+          ? 
+          <UserProfile userInfo={this.state.userInfo} />
+          :
+          null}
         </GridItem>
         <GridItem xs={12} sm={12} md={12} >
           <Table
@@ -68,4 +86,10 @@ class ManageDriver extends React.Component {
   }
 }
 
-export default ManageDriver;
+const mapDispatchToProps = dispatch => {
+  return {
+    doGetUserForType: (dif) => dispatch(getUserForType(dif))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ManageDriver);
