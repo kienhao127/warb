@@ -4,7 +4,7 @@ var token=require('../controller/TokenCtrl.js');
 
 var router = express.Router();
 
-router.route('/')
-.post(map.getLatLong)
+router.route('/getLatLng')
+.post(token.checkAccessToken,map.getLatLong)
 
 module.exports = router;

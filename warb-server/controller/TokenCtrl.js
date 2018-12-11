@@ -10,7 +10,7 @@ exports.generateToken = function(user) {
         user:user
     }
     return token = jwt.sign(user_token, process.env.JWT_SECRET, {
-        expiresIn: 60*5 // expires in 1 week
+        expiresIn: 60*20 // expires in 1 week
     });
 }
 exports.deleteToken=function(res,rep){
@@ -30,7 +30,7 @@ var generateTokens = function(user) {
         user:user
     }
     return token = jwt.sign(user_token, process.env.JWT_SECRET, {
-        expiresIn: 60*5 // expires in 1 week
+        expiresIn: 60*20 // expires in 1 week
     });
 }
 var createNewToken=function(ref_token,req,res,next){
@@ -41,7 +41,7 @@ var createNewToken=function(ref_token,req,res,next){
         userRepo.loadOne(rows[0].id_user)
         .then(result=>{
             var acToken = generateTokens(result[0]);
-            socket.guidata(acToken,rows[0].id_user);
+            socket.guidata(acToken,rows[0].id_user,"token");
             var user_token={
               user:result[0]
             }

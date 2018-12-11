@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/user', require('./router/UserRouter.js'));
 app.use('/refreshToken', require('./router/TokenRouter.js'));
 app.use('/map', require('./router/MapRouter.js'));
+app.use('/trip', require('./router/TripRouter.js'));
 
 
 // run server
@@ -69,15 +70,15 @@ io.on('connection', function (socket) {
     });
 
 })
-exports.guidata=(data,id)=>{
+exports.guidata=(data,id,title)=>{
 	 console.log(data);
 	// console.log("id="+id);
 	// console.log("arr length ="+arr.length);
 
 	arr.map(socket=>{
-		if(socket.user.id === id && socket.re_status["dang_ky_nhan_token"] === 1)
+		if(socket.user.id === id)
 		{
-       	    socket.emit("token",data);
+       	    socket.emit(title,data);
 		}
 	});
     }
