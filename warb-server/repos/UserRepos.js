@@ -3,26 +3,31 @@ var md5=require('crypto-js/md5');
 
 exports.loadAll = function() {
 	var sql = `select * from staff where isDelete = 0`;
+	console.log(sql);
 	return db.load(sql);
 }
 
 exports.loadOne = function(id) {
 	// console.log("id load one :"+id);
 	var sql = `select * from staff where isDelete = 0 and id = ${id}`;
+	console.log(sql);
 	return db.load(sql);
 }
 exports.loadOnebyType = function(type) {
 	
 	var sql = `select * from staff where isDelete = 0 and userType = ${type}`;
+	console.log(sql);
 	return db.load(sql);
 }
 exports.loadForType = function(difriend) {
 	if(difriend===0)
 	{
 		var sql = `select * from staff where isDelete = 0 and userType = 4`;
+	    console.log(sql);
 	    return db.load(sql);
 	}else{
 		var sql = `select * from staff where isDelete = 0 and userType != 4`;
+	   console.log(sql);
 	    return db.load(sql);
 	}
 	
@@ -40,14 +45,17 @@ exports.login = function(c) {
 
 exports.add = function(c) {
 	var sql = `insert into staff(username,password,fullname,userType,isDelete,phone,dob) values('${c.username}','${c.password}','${c.fullname}',${c.userType},${c.isDelete},'${c.phone}','${c.dob}')`;
+	console.log(sql);
 	return db.write(sql);
 }
 
 exports.delete = function(id) {
 	var sql = `delete from staff where id = ${id}`;
+	console.log(sql);
 	return db.write(sql);
 }
 exports.loadDriver = function(id) {
 	var sql = `delete from staff where id = ${id}`;
+	console.log(sql);
 	return db.write(sql);
 }
