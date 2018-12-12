@@ -10,6 +10,8 @@ router.route('/updateTrip')
 router.route('/updateTripStatus')
 .post(token.checkAccessToken,tripCtrl.updateTripStatus);
 
+router.route('/getAllTrip')
+.post(token.checkAccessToken,tripCtrl.getAllTrip);
 router.route('/addCustomerAndTrip')
 .post(token.checkAccessToken,tripCtrl.addCustomerAndTrip);
 module.exports = router;

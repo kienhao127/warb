@@ -21,6 +21,26 @@ exports.updateTripLocation = function(req,res) {
             });
     });
 }
+exports.getAllTrip=function(req,res){
+    tripRepo.loadTrip()
+    .then(rows=>{
+        if(rows.length>0)
+        {
+            res.json({
+                returnCode:1,
+                message:" lấy danh sách trip thành công!",
+                object:rows
+            })
+        }
+    })
+    .catch(err=>{
+        res.json({
+                returnCode:0,
+                message:"lấy danh sách trip thất bại!",
+                error:err
+            });
+    });
+}
 exports.addCustomerAndTrip=function(req,res){
     var c=req.body;
     var users=req.user_token;

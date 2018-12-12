@@ -14,6 +14,11 @@ exports.addCustomer=function(cus){
 	console.log(sql);
 	return db.write(sql);
 }
+exports.loadTrip=function(cus){
+	var sql = `select * from trip ORDER BY requestTime DESC`;
+	console.log(sql);
+	return db.write(sql);
+}
 exports.addTrip=function(trip){
 	var sql =  `insert into trip(customerId,driverId,tripLocation,tripLongitude,tripLatitude,status,note,requestTime,isDelete) 
 	values(${trip.customerId},${trip.driverId},'${trip.tripLocation}','${trip.tripLongitude}','${trip.tripLatitude}',${trip.status},'${trip.note}',${trip.requestTime},${trip.isDelete})`;

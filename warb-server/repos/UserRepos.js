@@ -7,7 +7,7 @@ exports.loadAll = function() {
 }
 
 exports.loadOne = function(id) {
-	console.log("id load one :"+id);
+	// console.log("id load one :"+id);
 	var sql = `select * from staff where isDelete = 0 and id = ${id}`;
 	return db.load(sql);
 }
