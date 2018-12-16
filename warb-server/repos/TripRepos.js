@@ -19,6 +19,21 @@ exports.loadTrip=function(cus){
 	console.log(sql);
 	return db.write(sql);
 }
+exports.loadTripFull=function(cus){
+	var sql = `select * from trip t,customer c,staff s where t.customerId = c.id and t.driverId=s.id ORDER BY requestTime DESC`;
+	console.log(sql);
+	return db.write(sql);
+}
+exports.loadTripFull2=function(cus){
+	var sql = `select * from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN staff s ON t.driverId=s.id ORDER BY t.requestTime DESC`; 
+	console.log(sql);
+	return db.write(sql);
+}
+exports.getTripByDriverId=function(id){
+    var sql = `select * from trip where driverID = ${id}`;
+	console.log(sql);
+	return db.write(sql);
+}
 exports.addTrip=function(trip){
 	var sql =  `insert into trip(customerId,driverId,tripLocation,tripLongitude,tripLatitude,status,note,requestTime,isDelete) 
 	values(${trip.customerId},${trip.driverId},'${trip.tripLocation}','${trip.tripLongitude}','${trip.tripLatitude}',${trip.status},'${trip.note}',${trip.requestTime},${trip.isDelete})`;

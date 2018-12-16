@@ -21,11 +21,41 @@ exports.updateTripLocation = function(req,res) {
             });
     });
 }
-exports.getAllTrip=function(req,res){
-    tripRepo.loadTrip()
+exports.getTripByDriverId=function(req,res){
+    var c=req.body;
+    tripRepo.getTripByDriverId(c.driverID)
     .then(rows=>{
         if(rows.length>0)
         {
+           res.json({
+                returnCode:1,
+                message:" lấy danh sách trip thành công!",
+                object:rows
+            })
+        }else {
+           res.json({
+                returnCode:0,
+                message:" khong co trip nao!",
+                object:rows
+            })
+        }
+    })
+    .catch(err=>{
+        res.json({
+                returnCode:0,
+                message:"lấy danh sách trip thất bại!",
+                error:err
+            });
+    })
+}
+exports.getAllTrip=function(req,res){
+    tripRepo.loadTripFull2()
+    .then(rows=>{
+        if(rows.length>0)
+        {
+            rows.map(m=>{
+                m.password="";
+            })
             res.json({
                 returnCode:1,
                 message:" lấy danh sách trip thành công!",
