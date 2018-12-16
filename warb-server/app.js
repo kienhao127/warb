@@ -33,6 +33,7 @@ app.get("/",(req,res)=>{
 //SOCKET
 
 var arr=[];
+var arrDriver=[];
 var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
     socket.user={id:0};
@@ -59,6 +60,10 @@ io.on('connection', function (socket) {
                 if(rows.length>0)
                 {
                     socket.user=rows[0];
+                    if(socket.user.userType===4)
+                    {
+                        arrDriver.push(socket);
+                    }
                     //console.log(rows[0]);
                     socket.re_status.dang_ky_nhan_token=1;
                 }

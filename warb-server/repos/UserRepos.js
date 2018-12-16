@@ -61,7 +61,7 @@ exports.loadDriver = function(id) {
 }
 exports.addDriver=function(driver)
 {
-	var sql = `insert into driver(username,password,fullname,userType,isDelete,phone,dob) values('${c.username}','${c.password}','${c.fullname}',${c.userType},${c.isDelete},'${c.phone}','${c.dob}')`;
+	var sql = `insert into driver(staffId,status) values('${driver.staffId}',${driver.status})`;
 	console.log(sql);
 	return db.write(sql);
 }
