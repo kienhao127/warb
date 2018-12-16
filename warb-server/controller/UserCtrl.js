@@ -37,6 +37,12 @@ exports.getUser = function(req,res) {
 				message:"get user susscess",
 				user:rows[0]
 			});
+		}else{
+			res.json({
+				returnCode:0,
+				message:"not user to get",
+				user:rows	
+			});
 		}
 	})
 	.catch(err=>{
@@ -91,6 +97,12 @@ exports.getUserForType = function(req,res) {
 				returnCode:1,
 				message:"get susscess",
 				object:rows
+			});
+		}else{
+			res.json({
+				returnCode:0,
+				message:"not user to get",
+				object:rows	
 			});
 		}
 	})

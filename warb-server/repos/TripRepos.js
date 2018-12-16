@@ -14,6 +14,7 @@ exports.addCustomer=function(cus){
 	console.log(sql);
 	return db.write(sql);
 }
+
 exports.loadTrip=function(cus){
 	var sql = `select * from trip ORDER BY requestTime DESC`;
 	console.log(sql);
@@ -25,7 +26,7 @@ exports.loadTripFull=function(cus){
 	return db.write(sql);
 }
 exports.loadTripFull2=function(cus){
-	var sql = `select * from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN staff s ON t.driverId=s.id ORDER BY t.requestTime DESC`; 
+	var sql = `select * from trip t INNER JOIN customer c ON t.customerId = c.id INNER JOIN tripstatus ta ON t.status = ta.id LEFT JOIN staff s ON t.driverId=s.id ORDER BY t.requestTime DESC`; 
 	console.log(sql);
 	return db.write(sql);
 }

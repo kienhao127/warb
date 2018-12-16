@@ -51,8 +51,6 @@ exports.getTripByDriverId=function(req,res){
 exports.getAllTrip=function(req,res){
     tripRepo.loadTripFull2()
     .then(rows=>{
-        if(rows.length>0)
-        {
             rows.map(m=>{
                 m.password="";
             })
@@ -61,7 +59,6 @@ exports.getAllTrip=function(req,res){
                 message:" lấy danh sách trip thành công!",
                 object:rows
             })
-        }
     })
     .catch(err=>{
         res.json({
