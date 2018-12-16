@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal } from "@material-ui/core";
+import { CardContent } from "@material-ui/core";
 export default class InfoTripModal extends Component {
   state = {
     open: false
@@ -16,20 +16,36 @@ export default class InfoTripModal extends Component {
   }
   render() {
     const { open } = this.state;
+    const name = "Hoàng Nam"
+    const numberPhone= "01203241687"
+    const address = "c4-402 chugng ccc"
     return (
-      <Modal
-        open={open}
-        style={{ width: window.innerWidth, height: window.innerHeight,flex:1,justifyContent:"center" }}
+      <div
+        style={{
+          width: window.innerWidth * 0.5,
+          height: window.innerHeight * 0.25,
+          backgroundColor: "#F2F2F2",
+          borderRadius: 8,
+          zIndex: 1,
+          position: "absolute",
+          bottom: 10,
+          left: window.innerWidth * 0.25,
+          right: window.innerWidth * 0.25,
+          borderColor:"red",
+          borderWidth:1
+        }}
       >
-        <div
-          style={{
-            width: window.innerWidth * 0.5,
-            height: window.innerHeight * 0.5,
-            backgroundColor: "white",
-            borderRadius: 8
-          }}
-        />
-      </Modal>
+      
+      <CardContent>
+        <p style={{fontFamily: 'Roboto-Light'}}>Tên khách hàng: {name}</p>
+      </CardContent>
+      <CardContent>
+        <p style={{fontFamily: 'Roboto-Light'}}>Số điện thoại khách hàng: {numberPhone}</p>
+      </CardContent>
+      <CardContent>
+        <p style={{fontFamily: 'Roboto-Light'}}>Địa chỉ đón khách: {address}</p>
+      </CardContent>
+      </div>
     );
   }
 }

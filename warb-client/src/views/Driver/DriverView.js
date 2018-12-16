@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import { AppBar, Tab, Tabs } from "@material-ui/core";
 import { haversineDistance } from "../../Utils/FunctionHelper";
-import InfoTripModal from './InfoTripModal'
+import InfoTripModal from "./InfoTripModal";
 class Driver extends Component {
   constructor(props) {
     super(props);
@@ -27,20 +27,19 @@ class Driver extends Component {
       alert("Khoảng cách lớn hơn 100m");
     }
   }
-  handleLogout=()=>{
-    sessionStorage.removeItem('access_token')
-    this.props.history.push('/login')
-  }
+  handleLogout = () => {
+    sessionStorage.removeItem("access_token");
+    this.props.history.push("/login");
+  };
   render() {
     const { lat, lng } = this.state;
     return (
       <div>
         <AppBar title="My App" centered>
           <Tabs>
-            <Tab label="Item 1" style={styles.tabStyle}  />
-            <Tab label="Item 2" style={styles.tabStyle}  />
-            <Tab label="Item 3" style={styles.tabStyle} 
-             />
+            <Tab label="Item 1" style={styles.tabStyle} />
+            <Tab label="Item 2" style={styles.tabStyle} />
+            <Tab label="Item 3" style={styles.tabStyle} />
             <Tab
               label="Logout"
               style={styles.tabStyle}
@@ -49,7 +48,7 @@ class Driver extends Component {
           </Tabs>
         </AppBar>
 
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, zIndex: 2 }}>
           <Map
             google={this.props.google}
             zoom={14}
@@ -58,7 +57,6 @@ class Driver extends Component {
               lng: lng
             }}
             gestureHandling={"cooperative"}
-
             onClick={this.mapClicked.bind(this)}
           >
             <Marker
@@ -70,11 +68,7 @@ class Driver extends Component {
             />
           </Map>
         </div>
-        
-        {/* <InfoTripModal
-            ref={"InfoTrip"}
-            parent={this}
-        /> */}
+        <InfoTripModal/>
       </div>
     );
   }
