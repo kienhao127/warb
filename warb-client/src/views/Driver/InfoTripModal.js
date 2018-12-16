@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardContent } from "@material-ui/core";
+import { CardContent, Button, Card } from "@material-ui/core";
 export default class InfoTripModal extends Component {
   state = {
     open: false
@@ -16,9 +16,9 @@ export default class InfoTripModal extends Component {
   }
   render() {
     const { open } = this.state;
-    const name = "Hoàng Nam"
-    const numberPhone= "01203241687"
-    const address = "c4-402 chugng ccc"
+    const name = "Hoàng Nam";
+    const numberPhone = "01203241687";
+    const address = "c4-402 chugng ccc";
     return (
       <div
         style={{
@@ -31,20 +31,44 @@ export default class InfoTripModal extends Component {
           bottom: 10,
           left: window.innerWidth * 0.25,
           right: window.innerWidth * 0.25,
-          borderColor:"red",
+          borderColor:"black",
           borderWidth:1
         }}
       >
-      
-      <CardContent>
-        <p style={{fontFamily: 'Roboto-Light'}}>Tên khách hàng: {name}</p>
-      </CardContent>
-      <CardContent>
-        <p style={{fontFamily: 'Roboto-Light'}}>Số điện thoại khách hàng: {numberPhone}</p>
-      </CardContent>
-      <CardContent>
-        <p style={{fontFamily: 'Roboto-Light'}}>Địa chỉ đón khách: {address}</p>
-      </CardContent>
+        <div style={{ width: "75%", float: "left" }}>
+          <CardContent>
+            <p style={{ fontFamily: "Roboto-Light" }}>
+              Tên khách hàng: {name}
+            </p>
+          </CardContent>
+          <CardContent>
+            <p style={{ fontFamily: "Roboto-Light" }}>
+              Số điện thoại khách hàng: {numberPhone}
+            </p>
+          </CardContent>
+          <CardContent>
+            <p style={{ fontFamily: "Roboto-Light" }}>
+              Địa chỉ đón khách: {address}
+            </p>
+          </CardContent>
+        </div>
+
+        <div style={{ width: "25%", float: "right", height: "100%" }}>
+          <CardContent>
+            <Button variant="contained" color="primary"
+            style={{fontSize:12,color:'white',width:120}}
+            >
+              Nhận chuyến
+            </Button>
+          </CardContent>
+          <CardContent>
+            <Button variant="contained" color="secondary"
+             style={{fontSize:12,width:120}} 
+            >
+              Huỷ chuyến
+            </Button>
+          </CardContent>
+        </div>
       </div>
     );
   }
