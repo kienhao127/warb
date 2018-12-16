@@ -23,10 +23,6 @@ class LocateRequestView extends Component {
     const { lat, lng } = this.state
     return (
       <GridContainer >
-        {/* <Card>
-
-
-        </Card> */}
         <Card>
           <CardHeader color="primary">
             <h2>THÔNG TIN ĐỊA CHỈ: {this.state.address}</h2>
@@ -51,7 +47,6 @@ class LocateRequestView extends Component {
           </div>
         </Card>
       </GridContainer>
-      // </div>
     );
   }
 }
