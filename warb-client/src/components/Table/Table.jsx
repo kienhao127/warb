@@ -15,6 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import tableStyle from "assets/jss/material-dashboard-react/components/tableStyle.jsx";
+import moment from 'moment';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -167,7 +168,7 @@ class EnhancedTable extends React.Component {
                         : null}
                         {tableHead.map(head => {
                           return (
-                            <TableCell className={classes.tableCell} padding="none" style={{ textDecoration: 'none' }} component={Link} to={linkTo + n.id}>{n[head.id]}</TableCell>
+                            <TableCell className={classes.tableCell} padding="none" style={{ textDecoration: 'none' }} component={Link} to={linkTo + n.id}>{head.type === 'time' ? moment(n[head.id]).format('DD/MM/YYYY') : n[head.id]}</TableCell>
                           );
                         })}
                       </TableRow>

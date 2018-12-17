@@ -51,3 +51,20 @@ export function getUserForTypeApi(access_token, refresh_token, dif){
     }
     return fetchApi('user/getUserForType', 'POST', body);
 }
+
+export function getAllTripApi(access_token, refresh_token){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+    }
+    return fetchApi('trip/getAllTrip', 'POST', body);
+}
+
+export function getTripByDriverIdApi(access_token, refresh_token, driverId){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        driverID: driverId,
+    }
+    return fetchApi('trip/getTripByDriverId', 'POST', body);
+}
