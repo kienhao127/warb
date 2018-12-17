@@ -5,6 +5,7 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var token=require('./repos/UserRepos.js');
+var driver=require('./controller/DriverCtrl.js');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -34,23 +35,36 @@ app.get("/",(req,res)=>{
 
 var arr=[];
 var arrDriver=[];
+var arrRequest=[];
 var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
     socket.user={id:0};
+    socket.location={};
     arr.push(socket);
-    socket.re_status=[{key:0}];
+    socket.driver_status=1;
+    console.log('==========================================================================');
     console.log('a user connected id= '+socket.id);
 
     socket.on('disconnect', function(){
         console.log('user disconnected');
         arr.splice(arr.indexOf(socket.id),1);
+        arrDriver.splice(arrDriver.indexOf(socket.id),1);
 
     });
-    socket.on("gui_data",function(data){
-        console.log(data);
+    socket.on("location_driver",function(data){
+        if(socket.user.userType===4){
+            socket.location=data;
+        }
+    });
+    socket.on("request-client",function(data){
+        arrRequest.push(data);
+        driver.sendRequestForDriver(socket,data,arrDriver,arrRequest);
+    });
+    socket.on("accept_request",function(data){
+        arrRequest.splice(arrRequest.indexOf(data),1);
     });
     socket.on("send_refresh_token",function(data){
-        console.log(data);
+        console.log("nhan duoc send_refresh_token "+data);
         if(data===null || data.length===0)
         {
                console.log("không nhan dc send_refresh_token tu client");
@@ -62,10 +76,11 @@ io.on('connection', function (socket) {
                     socket.user=rows[0];
                     if(socket.user.userType===4)
                     {
+                        
                         arrDriver.push(socket);
+                        
                     }
                     //console.log(rows[0]);
-                    socket.re_status.dang_ky_nhan_token=1;
                 }
             })
             .catch(error=>{
@@ -75,7 +90,23 @@ io.on('connection', function (socket) {
     });
 
 })
-exports.guidata=(data,id,title)=>{
+app.get("/haha",(req,res)=>{
+    var user=[];
+    if(arrDriver.length>0)
+    {
+        arrDriver.map(e=>{
+           user.push({
+            user:e.user,
+            location:e.location
+           }); 
+        })
+    }
+    res.json({
+        arrDriver:arrDriver.length,
+        socket:user
+    });
+})
+var guidata=(data,id,title)=>{
 	 console.log(data);
 	// console.log("id="+id);
 	// console.log("arr length ="+arr.length);
@@ -87,4 +118,7 @@ exports.guidata=(data,id,title)=>{
 		}
 	});
     }
+module.exports.arrDriver=arrDriver;
+module.exports.guidata=guidata;
+module.exports.arrRequest=arrRequest
 

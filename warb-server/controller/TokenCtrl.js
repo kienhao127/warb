@@ -10,7 +10,7 @@ exports.generateToken = function(user) {
         user:user
     }
     return token = jwt.sign(user_token, process.env.JWT_SECRET, {
-        expiresIn: 60*20 // expires in 1 week
+        expiresIn: 60*30 // expires in 1 week
     });
 }
 exports.deleteToken=function(res,rep){

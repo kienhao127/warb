@@ -31,7 +31,7 @@ exports.loadTripFull2=function(cus){
 	return db.write(sql);
 }
 exports.getTripByDriverId=function(id){
-    var sql = `select * from trip where driverID = ${id}`;
+    var sql = `select t.*, ta.id as statusId, ta.statusName, s.fullname as driverName, c.id as customerId, c.customerName, c.customerPhone, c.customerAddress from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN tripstatus ta ON t.status = ta.id LEFT JOIN staff s ON t.driverId=s.id where t.driverID = ${id}`;
 	console.log(sql);
 	return db.write(sql);
 }
