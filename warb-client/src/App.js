@@ -25,6 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    console.log('user', this.state.user);
     //gửi refresh token lên server để nhận biết user
     if (sessionStorage.getItem('refresh_token') !== null) {
       socket.emit('send_refresh_token', sessionStorage.getItem('refresh_token'));
@@ -55,8 +56,6 @@ class App extends Component {
             <MuiThemeProvider theme={theme}>
               <Switch>
                 <Route path={"/driver"} component={DriverView} />
-                <Route path={"/dashboard"} component={Dashboard} />
-                <Route path={"/"} component={Login} />
                 <Redirect from={"/"} to={"/driver"} />
               </Switch>
             </MuiThemeProvider>
@@ -66,8 +65,6 @@ class App extends Component {
             <MuiThemeProvider theme={theme}>
               <Switch>
                 <Route path={"/dashboard"} component={Dashboard} />
-                <Route path={"/driver"} component={DriverView} />
-                <Route path={"/"} component={Login} />
                 <Redirect from={"/"} to={"/dashboard"} />
               </Switch>
             </MuiThemeProvider>
@@ -80,7 +77,7 @@ class App extends Component {
           <Switch>
             <Route path={"/dashboard"} component={Dashboard} />
             <Route path={"/driver"} component={DriverView} />
-            <Route path={"/"} component={Login} />
+            <Route exact path={"/"} component={Login} />
           </Switch>
         </MuiThemeProvider>
       );

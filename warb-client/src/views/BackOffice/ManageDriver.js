@@ -5,6 +5,7 @@ import GridItem from "../../components/Grid/GridItem";
 import UserProfile from "components/UserProfile/UserProfile";
 import { connect } from "react-redux";
 import { getUserForType } from "../../store/actions/user";
+import { getTripByDriverId } from "../../store/actions/trip";
 
 const tableDriverHead = [
   { id: 'id', label: 'Mã tài xế' },
@@ -41,9 +42,20 @@ class ManageDriver extends React.Component {
         tableDriverData: resJson.object,
         userInfo: resJson.object[0]
       })
+      this.getTripByDriverId(resJson.object[0].id);
     })
     .catch(error =>{
       console.log('doGetUserForType error', error);
+    })
+  }
+
+  getTripByDriverId = (driverId) => {
+    this.props.doGetTripByDriverId(driverId)
+    .then(resJson => {
+
+    })
+    .catch(error => {
+      console.log(error);
     })
   }
 
@@ -88,7 +100,8 @@ class ManageDriver extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    doGetUserForType: (dif) => dispatch(getUserForType(dif))
+    doGetUserForType: (dif) => dispatch(getUserForType(dif)),
+    doGetTripByDriverId: (driverId) => dispatch(getTripByDriverId(driverId)),
   };
 };
 

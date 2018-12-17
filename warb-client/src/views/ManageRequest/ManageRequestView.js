@@ -1,15 +1,16 @@
 import React from "react";
 import Table from "components/Table/Table.jsx";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { connect } from "react-redux";
+import { getAllTrip } from "../../store/actions/trip";
 
 const tableHead = [
-  { id: 'tripId', label: 'Mã chuyến đi' },
+  { id: 'id', label: 'Mã chuyến đi' },
   { id: 'customerName', label: 'Tên khách' },
-  { id: 'address', label: 'Địa chỉ đón khách ' },
-  { id: 'requestTime', label: 'Thời gian' },
+  { id: 'customerAddress', label: 'Địa chỉ đón khách ' },
+  { id: 'requestTime', label: 'Thời gian', type: 'time' },
   { id: 'note', label: 'Ghi chú' },
   { id: 'driverName', label: 'Tài xế' },
-  { id: 'status', label: 'Tình trạng' },
+  { id: 'statusName', label: 'Tình trạng' },
 ];
 
 class ManageRequestView extends React.Component {
@@ -21,6 +22,18 @@ class ManageRequestView extends React.Component {
       tableTitleSecondary: '',
       tableData: [],
     };
+  }
+
+  componentDidMount(){
+    this.props.doGetAllTrip()
+    .then(resJson => {
+      this.setState({
+        tableData: resJson.object
+      })
+    })
+    .catch(error => {
+      console.log('get all trip error');
+    })
   }
 
   render() {
@@ -36,8 +49,10 @@ class ManageRequestView extends React.Component {
   }
 }
 
-const styles = {
-  
+const mapDispatchToProps = dispatch => {
+  return {
+    doGetAllTrip: () => dispatch(getAllTrip())
+  };
 };
 
-export default withStyles(styles)(ManageRequestView);
+export default connect(null, mapDispatchToProps)(ManageRequestView);
