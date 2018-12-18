@@ -105,7 +105,7 @@ exports.addCustomerAndTrip=function(req,res){
             tripRepo.addTrip(trip)
             .then(data=>{
                 trip.id=data.insertId;
-                socket.guidataForType(trip,users.user.id,"server_send_trip",3);
+                socket.guidataForType(trip,"server_send_trip");
                 res.json({
                 returnCode:1,
                 message:"Thêm khách hàng & chuyến đi thành công!",

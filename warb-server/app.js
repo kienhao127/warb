@@ -135,7 +135,7 @@ var guidata=(data,id,title)=>{
         }
     });
 }
-var guidataForType=(data,id,title,Type)=>{
+var guidataForType=(data,title)=>{
    console.log(data);
    io.sockets.emit(title,data);
 }
