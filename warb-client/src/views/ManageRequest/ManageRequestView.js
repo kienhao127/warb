@@ -2,6 +2,8 @@ import React from "react";
 import Table from "components/Table/Table.jsx";
 import { connect } from "react-redux";
 import { getAllTrip } from "../../store/actions/trip";
+import io from 'socket.io-client';
+const socket = io('http://localhost:8888')
 
 const tableHead = [
   { id: 'id', label: 'Mã chuyến đi' },
@@ -22,6 +24,8 @@ class ManageRequestView extends React.Component {
       tableTitleSecondary: '',
       tableData: [],
     };
+
+    socket.on('server_send_trip', (data) => this.onReciveData(data));
   }
 
   componentDidMount(){
@@ -34,6 +38,10 @@ class ManageRequestView extends React.Component {
     .catch(error => {
       console.log('get all trip error');
     })
+  }
+
+  onReciveData = (data) => {
+    console.log("data from socket key server_send_trip", data);
   }
 
   render() {

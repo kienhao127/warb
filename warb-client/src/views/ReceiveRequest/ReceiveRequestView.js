@@ -101,6 +101,12 @@ class ReceiveRequestView extends React.Component {
       .catch(error => {
 
       })
+      this.setState({
+        name: '',
+        phone: '',
+        address: '',
+        note: '',
+      })
     }
   }
 
