@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { CardContent, Button, Card } from "@material-ui/core";
+import GridContainer from "../../components/Grid/GridContainer";
+import GridItem from "../../components/Grid/GridItem";
 export default class InfoTripModal extends Component {
   state = {
     open: false
@@ -20,22 +22,15 @@ export default class InfoTripModal extends Component {
     const numberPhone = "01203241687";
     const address = "c4-402 chugng ccc";
     return (
-      <div
-        style={{
-          width: window.innerWidth * 0.5,
-          height: window.innerHeight * 0.25,
-          backgroundColor: "#F2F2F2",
-          borderRadius: 8,
-          zIndex: 1,
-          position: "absolute",
-          bottom: 10,
-          left: window.innerWidth * 0.25,
-          right: window.innerWidth * 0.25,
-          borderColor:"black",
-          borderWidth:1
-        }}
-      >
-        <div style={{ width: "75%", float: "left" }}>
+      <div style={{
+        position: "absolute",
+        bottom: 10,
+        left: window.innerWidth * 0.1,
+        right: window.innerWidth * 0.1,
+        backgroundColor: "#F2F2F2",
+        minWidth: 300
+      }}>
+        <div>
           <CardContent>
             <p style={{ fontFamily: "Roboto-Light" }}>
               Tên khách hàng: {name}
@@ -53,20 +48,20 @@ export default class InfoTripModal extends Component {
           </CardContent>
         </div>
 
-        <div style={{ width: "25%", float: "right", height: "100%" }}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
           <CardContent>
             <Button variant="contained" color="primary"
-            style={{fontSize:12,color:'white',width:120}}
+              style={{ fontSize: 12, color: 'white', width: 120 }}
             >
               Nhận chuyến
-            </Button>
+              </Button>
           </CardContent>
           <CardContent>
             <Button variant="contained" color="secondary"
-             style={{fontSize:12,width:120}} 
+              style={{ fontSize: 12, width: 120 }}
             >
               Huỷ chuyến
-            </Button>
+              </Button>
           </CardContent>
         </div>
       </div>
