@@ -37,19 +37,84 @@ var getListDistance=function(arrDriver,requestLocation){
 	    return a.dist-b.dist
     });
 }
-var send_request=function(soket_driver,request)
+var send_request=function(soket_driver,request,check)
 {
-    // return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+    	var thoi_han=false;
+    	soket_driver.emit("server_send_request",request);
+    	
+    	var action=setTimeout(()=>{
+            reject(thoi_han);
+    	}, 12000)
 
-    // })
+    	soket_driver.on("accept_request",function(data){
+           console.log("driver da chap nhan");
+           clearTimeout(action);
+           thoi_han=true
+           resolve(thoi_han);
+        });
+    })
 }
 exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrRequest){
-	var arrDistance=[];
-    var arrDistance=getListDistance(arrDriver,requestLocation);
-    if(arrDistance.length>0)
-    {
-    	 //send_request(arrDistance[0],requestLocation);
-    }
+	 var arrDistance=[];
+     var arrDistance=getListDistance(arrDriver,requestLocation);
+     if(arrDistance.length>0)
+     {
+     	var tt=0;
+     	var t=0;
+     	for (var i=0;i<=arrDistance.length;i++) {
+
+     		(function(ind) {
+     			var action=setTimeout(function(){
+     				if(t==arrDistance.length)
+     				{
+     					tt=1;
+     				}
+     				if(tt==0)
+     				{
+     					if(arrDistance[t].driver_status===1){
+     						send_request(arrDistance[t],requestLocation)
+     					.then(result=>{
+     						console.log("ket thuc");
+     						arrDistance[t].driver_status=2;
+     						tt=1;
+     					})
+     					.catch(err=>{
+     						console.log(err);
+     						console.log("driver nay khong nhan");
+     						t++;
+     					});
+     					}
+     				}
+     			}, ind*14000);
+     		})(i);
+     	}
+     }
+
+    // if(arrDistance.length>0)
+    // {
+    // 	var loop=0;
+    // 	var i=0
+    // 	do{
+    // 	 send_request(arrDistance[i],requestLocation)
+    // 	 .then(result=>{
+    	 	
+    // 	 		console.log("ket thuc");
+    // 	 		loop=0;
+    	 	
+    // 	 })
+    // 	 .catch(err=>{
+    // 	 	console.log(err);
+    // 	 	console.log("driver nay khong nhan");
+    // 	 	loop=1;
+    // 	 		if(i<arrDistance.length)
+    // 	 		{
+    // 	 			i++;
+    // 	 		}
+    // 	 });
+    // 	 console.log("heloo alibaba");
+    // 	}while(loop==1)
+    // }
     // arrDistance.map(e=>{
     // 	console.log(e.dist);
     // })

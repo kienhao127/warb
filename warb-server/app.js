@@ -60,9 +60,9 @@ io.on('connection', function (socket) {
         arrRequest.push(data);
         driver.sendRequestForDriver(socket,data,arrDriver,arrRequest);
     });
-    socket.on("accept_request",function(data){
-        arrRequest.splice(arrRequest.indexOf(data),1);
-    });
+    // socket.on("accept_request",function(data){
+    //     arrRequest.splice(arrRequest.indexOf(data),1);
+    // });
     socket.on("send_refresh_token",function(data){
         console.log("nhan duoc send_refresh_token "+data);
         if(data===null || data.length===0)
@@ -118,7 +118,20 @@ var guidata=(data,id,title)=>{
 		}
 	});
     }
+    var guidataForType=(data,id,title,Type)=>{
+     console.log(data);
+    // console.log("id="+id);
+    // console.log("arr length ="+arr.length);
+
+    arr.map(socket=>{
+        if(socket.user.userType===Type)
+        {
+            socket.emit(title,data);
+        }
+    });
+    }
 module.exports.arrDriver=arrDriver;
 module.exports.guidata=guidata;
+module.exports.guidataForType=guidataForType;
 module.exports.arrRequest=arrRequest
 
