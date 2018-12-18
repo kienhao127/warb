@@ -43,10 +43,11 @@ io.on('connection', function (socket) {
     arr.push(socket);
     socket.driver_status=1;
     console.log('==========================================================================');
-    console.log('a user connected id= '+socket.id);
+    console.log('*************=a user connected id= '+socket.id);
 
     socket.on('disconnect', function(){
-        console.log('user disconnected');
+
+        console.log('*************=a user disconnected id= '+socket.id);
         arr.splice(arr.indexOf(socket.id),1);
         arrDriver.splice(arrDriver.indexOf(socket.id),1);
 
@@ -91,45 +92,53 @@ io.on('connection', function (socket) {
 
 })
 app.get("/haha",(req,res)=>{
-    var user=[];
-    if(arrDriver.length>0)
+     var user=[];
+    if(arr.length>0)
     {
-        arrDriver.map(e=>{
+        arr.map(e=>{
            user.push({
-            user:e.user,
-            location:e.location
+            socket:e.id,
+            userid:e.user.id,
+            username:e.user.username,
+            Type:e.user.userType
            }); 
         })
     }
     res.json({
-        arrDriver:arrDriver.length,
         socket:user
     });
+
+    // var user=[];
+    // if(arrDriver.length>0)
+    // {
+    //     arrDriver.map(e=>{
+    //        user.push({
+    //         user:e.user,
+    //         location:e.location
+    //        }); 
+    //     })
+    // }
+    // res.json({
+    //     arrDriver:arrDriver.length,
+    //     socket:user
+    // });
 })
 var guidata=(data,id,title)=>{
-	 console.log(data);
+  console.log(data);
 	// console.log("id="+id);
 	// console.log("arr length ="+arr.length);
 
 	arr.map(socket=>{
 		if(socket.user.id === id)
 		{
-       	    socket.emit(title,data);
-		}
-	});
-    }
-    var guidataForType=(data,id,title,Type)=>{
-     console.log(data);
-    // console.log("id="+id);
-    // console.log("arr length ="+arr.length);
-
-    arr.map(socket=>{
-        if(socket.user.userType===Type)
-        {
             socket.emit(title,data);
         }
     });
-    }
+}
+var guidataForType=(data,id,title,Type)=>{
+   console.log(data);
+   io.sockets.emit(title,data);
+}
 module.exports.arrDriver=arrDriver;
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
