@@ -97,7 +97,7 @@ exports.addCustomerAndTrip=function(req,res){
                 tripLongitude:lng,
                 tripLatitude:lat,
                 status:0,
-                note:"chưa có nội dung",
+                note: req.body.note,
                 requestTime:moment().format('x'),
                 isDelete:0
             }
@@ -108,7 +108,7 @@ exports.addCustomerAndTrip=function(req,res){
                 socket.guidataForType(trip,users.user.id,"server_send_trip",3);
                 res.json({
                 returnCode:1,
-                message:"thêm customer & trip thành công!",
+                message:"Thêm khách hàng & chuyến đi thành công!",
                 object:{
                     trip:trip,
                     customer:customer
@@ -126,7 +126,7 @@ exports.addCustomerAndTrip=function(req,res){
     .catch(err=>{
          res.json({
                 returnCode:0,
-                message:"thêm customer không thành công!",
+                message:"Thêm khách hàng & chuyến đi thất bại!",
                 error:err
             });
     });

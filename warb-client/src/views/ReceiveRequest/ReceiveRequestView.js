@@ -1,5 +1,4 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import Button from "components/CustomButtons/Button.jsx";
@@ -7,6 +6,11 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import { TextField, Typography } from "@material-ui/core";
+import { connect } from "react-redux";
+import { addCustomerAndTrip } from "../../store/actions/trip";
+import AlertDialog from "../../components/Dialog/AlertDialog";
+import withStyles from "@material-ui/core/styles/withStyles";
+
 
 class ReceiveRequestView extends React.Component {
   constructor(props) {
@@ -23,6 +27,9 @@ class ReceiveRequestView extends React.Component {
       addressErrorMessage: '',
 
       errorCount: 0,
+
+      isDialogOpen: false,
+      dialogAlert: '',
     };
   }
 
@@ -79,14 +86,41 @@ class ReceiveRequestView extends React.Component {
   onReceiveClick = () => {
     var check = this.checkValidation(this.state.name, this.state.phone, this.state.address, this.state.note);
     if (check){
+      var customerInfo = {
+        customerName: this.state.name,
+        customerAddress: this.state.address,
+        customerPhone: this.state.phone,
+      }
+      this.props.doAddCustomerAndTrip(customerInfo, this.state.note)
+      .then(resJson => {
+        this.setState({
+          dialogAlert: resJson.message,
+          isDialogOpen: true
+        })
+      })
+      .catch(error => {
 
+      })
+      this.setState({
+        name: '',
+        phone: '',
+        address: '',
+        note: '',
+      })
     }
+  }
+
+  handleClose = () => {
+    this.setState({
+      isDialogOpen: false
+    })
   }
 
   render() {
     const { classes } = this.props;
     return (
       <GridContainer>
+        <AlertDialog open={this.state.isDialogOpen} title="Thông báo" content={this.state.dialogAlert}  onClose={this.handleClose}/>
         <GridItem xs={0} sm={0} md={2} />
         <GridItem xs={12} sm={12} md={8}>
           <Card>
@@ -172,4 +206,11 @@ const styles = {
   }
 };
 
-export default withStyles(styles)(ReceiveRequestView);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    doAddCustomerAndTrip: (customerInfo, note) => dispatch(addCustomerAndTrip(customerInfo, note))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(ReceiveRequestView));

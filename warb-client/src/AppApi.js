@@ -68,3 +68,16 @@ export function getTripByDriverIdApi(access_token, refresh_token, driverId){
     }
     return fetchApi('trip/getTripByDriverId', 'POST', body);
 }
+
+export function addCustomerAndTripApi(access_token, refresh_token, customerInfo, note){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        customerName: customerInfo.customerName,
+        customerPhone: customerInfo.customerPhone,
+        customerAddress: customerInfo.customerAddress,
+        note: note,
+        isDelete: 0
+    }
+    return fetchApi('trip/addCustomerAndTrip', 'POST', body);
+}
