@@ -157,3 +157,59 @@ exports.sendRequestForDriver10s=function(socket,requestLocation,arrDriver,arrReq
       }
     }
 }
+
+//g: driver tu choi request
+var refuse_request=function(soket_driver,request,check)
+{
+    return new Promise((resolve, reject) => {
+    	var thoi_han=false;
+    	soket_driver.emit("driver_refuse_request",request);
+    	
+    	var action=setTimeout(()=>{
+            reject(thoi_han);
+    	}, 12000)
+
+    	soket_driver.on("refuse_request",function(data){
+           console.log("driver tu choi yeu cau");
+           clearTimeout(action);
+           thoi_han=true
+           resolve(thoi_han);
+        });
+    })
+}
+exports.driverRefuseRequest=function(socket,requestLocation,arrDriver,arrRequest){
+  var arrDistance=[];
+    var arrDistance=getListDistance(arrDriver,requestLocation);
+    if(arrDistance.length>0)
+    {
+      var tt=0;
+      var t=0;
+      for (var i=0;i<=arrDistance.length;i++) {
+
+        (function(ind) {
+          var action=setTimeout(function(){
+            if(t==arrDistance.length)
+            {
+              tt=1;
+            }
+            if(tt==0)
+            {
+              if(arrDistance[t].driver_status===1){
+                refuse_request(arrDistance[t],requestLocation)
+              .then(result=>{
+                console.log("driver nay khong nhan");
+                arrDistance[t].driver_status=3;
+                tt=1;
+              })
+              .catch(err=>{
+                console.log(err);
+                console.log("driver nay khong nhan");
+                t++;
+              });
+              }
+            }
+          }, ind*14000);
+        })(i);
+      }
+    }
+}
