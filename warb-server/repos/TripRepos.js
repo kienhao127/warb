@@ -35,6 +35,11 @@ exports.getTripByDriverId=function(id){
 	console.log(sql);
 	return db.write(sql);
 }
+exports.getTripByTripId=function(id){
+    var sql = `select t.*, ta.id as statusId, ta.statusName, s.fullname as driverName, c.id as customerId, c.customerName, c.customerPhone, c.customerAddress from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN tripstatus ta ON t.status = ta.id LEFT JOIN staff s ON t.driverId=s.id where t.id = ${id}`;
+	console.log(sql);
+	return db.write(sql);
+}
 exports.addTrip=function(trip){
 	var sql =  `insert into trip(customerId,driverId,tripLocation,tripLongitude,tripLatitude,status,note,requestTime,isDelete) 
 	values(${trip.customerId},${trip.driverId},'${trip.tripLocation}','${trip.tripLongitude}','${trip.tripLatitude}',${trip.status},'${trip.note}',${trip.requestTime},${trip.isDelete})`;

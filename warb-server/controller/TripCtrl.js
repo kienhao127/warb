@@ -9,16 +9,16 @@ exports.updateTripLocation = function(req,res) {
     tripRepo.updateTripLocation(c)
     .then(rows=>{
         res.json({
-                returnCode:1,
-                message:"update TripLocation thanh công!",
-    })
+            returnCode:1,
+            message:"update TripLocation thanh công!",
+        })
     })
     .catch(err=>{
         res.json({
-                returnCode:0,
-                message:"update TripLocation không thành công!",
-                error:err
-            });
+            returnCode:0,
+            message:"update TripLocation không thành công!",
+            error:err
+        });
     });
 }
 exports.getTripByDriverId=function(req,res){
@@ -28,44 +28,44 @@ exports.getTripByDriverId=function(req,res){
         if(rows.length>0)
         {
            res.json({
-                returnCode:1,
-                message:" lấy danh sách trip thành công!",
-                object:rows
-            })
-        }else {
+            returnCode:1,
+            message:" lấy danh sách trip thành công!",
+            object:rows
+        })
+       }else {
            res.json({
-                returnCode:0,
-                message:" khong co trip nao!",
-                object:rows
-            })
-        }
-    })
+            returnCode:0,
+            message:" khong co trip nao!",
+            object:rows
+        })
+       }
+   })
     .catch(err=>{
         res.json({
-                returnCode:0,
-                message:"lấy danh sách trip thất bại!",
-                error:err
-            });
+            returnCode:0,
+            message:"lấy danh sách trip thất bại!",
+            error:err
+        });
     })
 }
 exports.getAllTrip=function(req,res){
     tripRepo.loadTripFull2()
     .then(rows=>{
-            rows.map(m=>{
-                m.password="";
-            })
-            res.json({
-                returnCode:1,
-                message:" lấy danh sách trip thành công!",
-                object:rows
-            })
+        rows.map(m=>{
+            m.password="";
+        })
+        res.json({
+            returnCode:1,
+            message:" lấy danh sách trip thành công!",
+            object:rows
+        })
     })
     .catch(err=>{
         res.json({
-                returnCode:0,
-                message:"lấy danh sách trip thất bại!",
-                error:err
-            });
+            returnCode:0,
+            message:"lấy danh sách trip thất bại!",
+            error:err
+        });
     });
 }
 exports.addCustomerAndTrip=function(req,res){
@@ -105,15 +105,26 @@ exports.addCustomerAndTrip=function(req,res){
             tripRepo.addTrip(trip)
             .then(data=>{
                 trip.id=data.insertId;
-                socket.guidataForType(trip,"server_send_trip");
-                res.json({
-                returnCode:1,
-                message:"Thêm khách hàng & chuyến đi thành công!",
-                object:{
-                    trip:trip,
-                    customer:customer
-                }
-            });
+                tripRepo.getTripByTripId(trip.id)
+                .then(values=>{
+                    socket.guidataForType(values,"server_send_trip");
+                    res.json({
+                        returnCode:1,
+                        message:"Thêm khách hàng & chuyến đi thành công!",
+                        object:{
+                            trip:trip,
+                            customer:customer
+                        }
+                    });
+                })
+                .catch(er=>{
+                   res.json({
+                    returnCode:0,
+                    message:"Thêm khách hàng & chuyến đi thất bại!",
+                    error:er
+                });
+               });
+                
             })
             .catch(err=>{
                 console.log(err);
@@ -124,12 +135,12 @@ exports.addCustomerAndTrip=function(req,res){
         });
     })
     .catch(err=>{
-         res.json({
-                returnCode:0,
-                message:"Thêm khách hàng & chuyến đi thất bại!",
-                error:err
-            });
+     res.json({
+        returnCode:0,
+        message:"Thêm khách hàng & chuyến đi thất bại!",
+        error:err
     });
+ });
 }
 exports.updateTripStatus = function(req,res) {
     var trip = {
@@ -150,10 +161,10 @@ exports.updateTripStatus = function(req,res) {
         });
     })
     .catch(err=>{
-            res.json({
+        res.json({
             returnCode: 0,
             message: "update trip status fail!",
             error: err
         });
     })
- }
+}
