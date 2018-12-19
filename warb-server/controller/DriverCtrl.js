@@ -119,3 +119,41 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrReques
     // 	console.log(e.dist);
     // })
 }
+
+//g
+exports.sendRequestForDriver10s=function(socket,requestLocation,arrDriver,arrRequest){
+  var arrDistance=[];
+    var arrDistance=getListDistance(arrDriver,requestLocation);
+    if(arrDistance.length>0)
+    {
+      var tt=0;
+      var t=0;
+      for (var i=0;i<=arrDistance.length;i++) {
+
+        (function(ind) {
+          var action=setTimeout(function(){
+            if(t==arrDistance.length)
+            {
+              tt=1;
+            }
+            if(tt==0)
+            {
+              if(arrDistance[t].driver_status===1){
+                send_request(arrDistance[t],requestLocation)
+              .then(result=>{
+                console.log("ket thuc");
+                arrDistance[t].driver_status=2;
+                tt=1;
+              })
+              .catch(err=>{
+                console.log(err);
+                console.log("driver nay khong nhan");
+                t++;
+              });
+              }
+            }
+          }, ind*14000);
+        })(i);
+      }
+    }
+}

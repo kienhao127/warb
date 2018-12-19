@@ -61,6 +61,11 @@ io.on('connection', function (socket) {
         arrRequest.push(data);
         driver.sendRequestForDriver(socket,data,arrDriver,arrRequest);
     });
+    //g
+    socket.on("request-client-10s",function(data){
+        arrRequest.push(data);
+        driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
+    });
     // socket.on("accept_request",function(data){
     //     arrRequest.splice(arrRequest.indexOf(data),1);
     // });
