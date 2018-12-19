@@ -136,8 +136,7 @@ var guidata=(data,id,title)=>{
     });
 }
 var guidataForType=(data,title)=>{
-   console.log(data);
-   io.sockets.emit(title,data);
+   io.sockets.emit(title,data[0]);
 }
 module.exports.arrDriver=arrDriver;
 module.exports.guidata=guidata;
