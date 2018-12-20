@@ -5,8 +5,14 @@ exports.updateTripLocation = function(trip) {
 	return db.write(sql);
 }
 
-exports.updateTripStatus = function(trip) {
-	var sql = `update trip set status = '${trip.status}' where id = '${trip.id}'`;
+exports.updateTripStatus = function(id,status) {
+	var sql = `update trip set status = ${status} where id = ${id}`;
+	console.log(sql);
+	return db.write(sql);
+}
+exports.updateDriverId = function(id,driverid) {
+	var sql = `update trip set driverId = ${driverid} where id = ${id}`;
+	console.log(sql);
 	return db.write(sql);
 }
 exports.addCustomer=function(cus){
@@ -15,11 +21,6 @@ exports.addCustomer=function(cus){
 	return db.write(sql);
 }
 
-exports.loadTrip=function(cus){
-	var sql = `select * from trip ORDER BY requestTime DESC`;
-	console.log(sql);
-	return db.write(sql);
-}
 exports.loadTripFull=function(cus){
 	var sql = `select * from trip t,customer c,staff s where t.customerId = c.id and t.driverId=s.id ORDER BY requestTime DESC`;
 	console.log(sql);

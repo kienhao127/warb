@@ -65,3 +65,9 @@ exports.addDriver=function(driver)
 	console.log(sql);
 	return db.write(sql);
 }
+exports.updateStausDriver=function(id,status)
+{
+	var sql = `update driver set status = ${status} where staffId = ${id}`;
+	console.log(sql);
+	return db.write(sql);
+}

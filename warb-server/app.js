@@ -4,7 +4,7 @@ var app = express();
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var token=require('./repos/UserRepos.js');
+var userRepos=require('./repos/UserRepos.js');
 var driver=require('./controller/DriverCtrl.js');
 
 app.use(morgan('dev'));
@@ -48,6 +48,10 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function(){
 
         console.log('*************=a user disconnected id= '+socket.id);
+        if(socket.user.userType===4)
+        {
+            userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
+        }
         arr.splice(arr.indexOf(socket.id),1);
         arrDriver.splice(arrDriver.indexOf(socket.id),1);
 
@@ -57,9 +61,19 @@ io.on('connection', function (socket) {
             socket.location=data;
         }
     });
+    socket.on("begin_trip",function(data){
+        if(socket.user.userType===4){
+            driver.beginTrip(socket,data);
+        }
+    });
+    socket.on("end_trip",function(data){
+        if(socket.user.userType===4){
+            driver.endTrip(socket,data,arrDriver);
+        }
+    });
     socket.on("request-client",function(data){
         arrRequest.push(data);
-        driver.sendRequestForDriver(socket,data,arrDriver,arrRequest);
+        driver.sendRequestForDriver(socket,data,arrDriver);
     });
     // socket.on("accept_request",function(data){
     //     arrRequest.splice(arrRequest.indexOf(data),1);
@@ -70,7 +84,7 @@ io.on('connection', function (socket) {
         {
                console.log("không nhan dc send_refresh_token tu client");
         }else {
-            token.getUserByRefreshToken(data)
+            userRepos.getUserByRefreshToken(data)
             .then(rows=>{
                 if(rows.length>0)
                 {
@@ -79,6 +93,7 @@ io.on('connection', function (socket) {
                     {
                         
                         arrDriver.push(socket);
+                        userRepos.updateStausDriver(rows[0].id,1).then(data=>{}).catch(err=>{console.log(err)});
                         
                     }
                     //console.log(rows[0]);

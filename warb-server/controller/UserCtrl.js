@@ -203,6 +203,20 @@ exports.register = function(req,res) {
 			returnCode:1,
 			msg: 'register success'
 		});
+		if(c.userType===4)
+		{
+			var driver={
+				staffId:rows.insertId,
+				status:3
+			}
+			userRepo.addDriver(driver)
+			.then(values=>{
+                console.log("add driver thanh cong!");
+			})
+			.catch(err=>{
+				console.log(err);
+			});
+		}
 	})
 	.catch(err => {
 		console.log(err);

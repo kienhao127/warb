@@ -1,4 +1,5 @@
-
+var userRepos=require('../repos/UserRepos.js');
+var tripRepos=require('../repos/TripRepos.js');
 var rad = function(x) {
   return x * Math.PI / 180;
 };
@@ -45,17 +46,18 @@ var send_request=function(soket_driver,request,check)
     	
     	var action=setTimeout(()=>{
             reject(thoi_han);
-    	}, 12000)
+    	}, 10000)
 
     	soket_driver.on("accept_request",function(data){
-           console.log("driver da chap nhan");
+           console.log(`driver ${soket_driver.user.username} da chap nhan`);
            clearTimeout(action);
            thoi_han=true
            resolve(thoi_han);
         });
     })
 }
-exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrRequest){
+
+exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
 	 var arrDistance=[];
      var arrDistance=getListDistance(arrDriver,requestLocation);
      if(arrDistance.length>0)
@@ -68,6 +70,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrReques
      			var action=setTimeout(function(){
      				if(t==arrDistance.length)
      				{
+     					tripRepos.updateTripStatus(requestLocation.id,7).then(data=>{}).catch(err=>{console.log(err)});
      					tt=1;
      				}
      				if(tt==0)
@@ -76,7 +79,13 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrReques
      						send_request(arrDistance[t],requestLocation)
      					.then(result=>{
      						console.log("ket thuc");
-     						arrDistance[t].driver_status=2;
+     						arrDistance.map(e=>{
+     							if(e.user.id===arrDistance[t].user.id){e.driver_status=2;}
+     						})
+     						
+     						tripRepos.updateDriverId(requestLocation.id,arrDistance[t].user.id).then(data=>{}).catch(err=>{console.log(err)});
+     						tripRepos.updateTripStatus(requestLocation.id,6).then(data=>{}).catch(err=>{console.log(err)});
+     						userRepos.updateStausDriver(arrDistance[t].user.id,2).then(data=>{}).catch(err=>{console.log(err)});
      						tt=1;
      					})
      					.catch(err=>{
@@ -86,36 +95,18 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,arrReques
      					});
      					}
      				}
-     			}, ind*14000);
+     			}, ind*11000);
      		})(i);
      	}
      }
-
-    // if(arrDistance.length>0)
-    // {
-    // 	var loop=0;
-    // 	var i=0
-    // 	do{
-    // 	 send_request(arrDistance[i],requestLocation)
-    // 	 .then(result=>{
-    	 	
-    // 	 		console.log("ket thuc");
-    // 	 		loop=0;
-    	 	
-    // 	 })
-    // 	 .catch(err=>{
-    // 	 	console.log(err);
-    // 	 	console.log("driver nay khong nhan");
-    // 	 	loop=1;
-    // 	 		if(i<arrDistance.length)
-    // 	 		{
-    // 	 			i++;
-    // 	 		}
-    // 	 });
-    // 	 console.log("heloo alibaba");
-    // 	}while(loop==1)
-    // }
-    // arrDistance.map(e=>{
-    // 	console.log(e.dist);
-    // })
+}
+exports.endTrip=function(socket,data,arrDriver){
+	tripRepos.updateTripStatus(data.id,5).then(data=>{}).catch(err=>{console.log(err)});
+	arrDriver.map(e=>{
+		if(e.user.id===socket.user.id){e.driver_status=1;}
+	})
+	userRepos.updateStausDriver(socket.user.id,1).then(data=>{}).catch(err=>{console.log(err)});
+}
+exports.beginTrip=function(socket,data){
+	tripRepos.updateTripStatus(data.id,4).then(data=>{}).catch(err=>{console.log(err)});
 }
