@@ -52,6 +52,10 @@ class ManageRequestView extends React.Component {
         tableTitleSecondary={this.state.tableTitleSecondary}
         tableHead={tableHead}
         tableData={this.state.tableData}
+        onTableRowClick={(data)=>{
+          
+          this.props.history.push("/dashboard/locaterequest",{infoTrip:data});
+        }}
       />
     );
   }

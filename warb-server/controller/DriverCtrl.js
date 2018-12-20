@@ -99,6 +99,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
      		})(i);
      	}
      }
+
 }
 exports.endTrip=function(socket,data,arrDriver){
 	tripRepos.updateTripStatus(data.id,5).then(data=>{}).catch(err=>{console.log(err)});
@@ -109,4 +110,6 @@ exports.endTrip=function(socket,data,arrDriver){
 }
 exports.beginTrip=function(socket,data){
 	tripRepos.updateTripStatus(data.id,4).then(data=>{}).catch(err=>{console.log(err)});
-}
+
+
+  

@@ -7,10 +7,13 @@ import CardHeader from "components/Card/CardHeader.jsx";
 class LocateRequestView extends Component {
   constructor(props) {
     super(props)
+    const {history}= this.props
+    const infoTrip = history.location.state.infoTrip
+    
     this.state = {
-      address: "Nhà Thờ Đức Bà",
-      lat: 10.7629123,
-      lng: 106.6734333///Lat  lng này đợi server gửi qua tạm thời set mặc định
+      address:infoTrip.customerAddress,
+      lat: infoTrip.tripLatitude,
+      lng:infoTrip.tripLongitude
     }
   }
   mapClicked(mapProps, map, clickEvent) {
@@ -21,6 +24,7 @@ class LocateRequestView extends Component {
   }
   render() {
     const { lat, lng } = this.state
+
     return (
       <GridContainer >
         <Card>
