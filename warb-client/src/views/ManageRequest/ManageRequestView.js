@@ -42,6 +42,11 @@ class ManageRequestView extends React.Component {
 
   onReciveData = (data) => {
     console.log("data from socket key server_send_trip", data);
+    var trips = this.state.tableData;
+    trips.unshift(data);
+    this.setState({
+      tableData: trips,
+    })
   }
 
   render() {
