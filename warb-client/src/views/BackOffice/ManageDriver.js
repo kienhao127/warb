@@ -14,10 +14,12 @@ const tableDriverHead = [
 ];
 
 const tableTripHead = [
-  { id: 'tripId', label: 'Mã chuyến đi' },
-  { id: 'cusomterName', label: 'Tên khách hàng' },
-  { id: 'address', label: 'Địa chỉ đón khách' },
-  { id: 'statusName', label: 'Tình trạng chuyến đi' },
+  { id: 'id', label: 'Mã chuyến đi' },
+  { id: 'customerName', label: 'Tên khách' },
+  { id: 'customerAddress', label: 'Địa chỉ đón khách ' },
+  { id: 'requestTime', label: 'Thời gian', type: 'time' },
+  { id: 'note', label: 'Ghi chú' },
+  { id: 'statusName', label: 'Tình trạng' },
 ];
 
 
@@ -52,7 +54,10 @@ class ManageDriver extends React.Component {
   getTripByDriverId = (driverId) => {
     this.props.doGetTripByDriverId(driverId)
     .then(resJson => {
-
+      console.log(resJson);
+      this.setState({
+        tableTripData: resJson.object,
+      })
     })
     .catch(error => {
       console.log(error);
@@ -63,6 +68,7 @@ class ManageDriver extends React.Component {
     this.setState({
       userInfo: item
     })
+    this.getTripByDriverId(item.id);
   }
 
   render() {
