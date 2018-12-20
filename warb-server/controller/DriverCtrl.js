@@ -112,4 +112,22 @@ exports.beginTrip=function(socket,data){
 	tripRepos.updateTripStatus(data.id,4).then(data=>{}).catch(err=>{console.log(err)});
 }
 
+//g
+var receive_request=function(soket_driver,request,check)
+{
+    return new Promise((resolve, reject) => {
+    	var thoi_han=false;
+    	soket_driver.emit("receive_request",request);
+    	
+    	var action=setTimeout(()=>{
+            reject(thoi_han);
+    	}, 10000)
 
+    	soket_driver.on("receive_request",function(data){
+			console.log('abc');
+           clearTimeout(action);
+           thoi_han=true
+           resolve(thoi_han);
+        });
+    })
+}

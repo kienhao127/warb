@@ -76,7 +76,7 @@ io.on('connection', function (socket) {
         driver.sendRequestForDriver(socket,data,arrDriver);
     });
     //g
-    socket.on("request-client-10s",function(data){
+    socket.on("receive-request",function(data){
         arrRequest.push(data);
         driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
     });
