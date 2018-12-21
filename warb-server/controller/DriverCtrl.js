@@ -24,7 +24,8 @@ var getDistance = function(p1, p2) {
 var getListDistance=function(arrDriver,requestLocation){
 	var list=[];
     arrDriver.map(driver=>{
-    	if(driver.driver_status!=2)
+        driver.premission=true;
+    	if(driver.driver_status===1)
     	{
     		var location={
     			lat:requestLocation.tripLatitude,
@@ -38,6 +39,7 @@ var getListDistance=function(arrDriver,requestLocation){
 	    return a.dist-b.dist
     });
 }
+
 var send_request=function(soket_driver,request,check)
 {
     return new Promise((resolve, reject) => {
@@ -45,14 +47,24 @@ var send_request=function(soket_driver,request,check)
     	soket_driver.emit("server_send_request",request);
     	
     	var action=setTimeout(()=>{
+            soket_driver.premission=false;
             reject(thoi_han);
     	}, 10000)
 
     	soket_driver.on("accept_request",function(data){
-           console.log(`driver ${soket_driver.user.username} da chap nhan`);
+            if(soket_driver.premission===true){
+            console.log(`===========> Driver ${soket_driver.user.username} đã chấp nhận chuyến đy`);
            clearTimeout(action);
            thoi_han=true
            resolve(thoi_han);
+            }  
+        });
+        soket_driver.on("destroy_request",function(data){
+            soket_driver.premission=false;
+           console.log(`===========> Driver ${soket_driver.user.username} đã chấp nhận chuyến đy`);
+           clearTimeout(action);
+           thoi_han=true
+           reject(thoi_han);
         });
     })
 }
@@ -78,6 +90,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
      					if(arrDistance[t].driver_status===1){
      						send_request(arrDistance[t],requestLocation)
      					.then(result=>{
+                            console.log(`===========> Driver ${arrDistance[t].user.username} đã chấp nhận chuyến đy`);
      						console.log("ket thuc");
      						arrDistance.map(e=>{
      							if(e.user.id===arrDistance[t].user.id){e.driver_status=2;}
@@ -111,7 +124,18 @@ exports.endTrip=function(socket,data,arrDriver){
 exports.beginTrip=function(socket,data){
 	tripRepos.updateTripStatus(data.id,4).then(data=>{}).catch(err=>{console.log(err)});
 }
-
+exports.driverOnline=function(socket,data,arrDriver){
+    arrDriver.map(e=>{
+        if(e.user.id===socket.user.id){e.driver_status=1;}
+    })
+    userRepos.updateStausDriver(socket.user.id,1).then(data=>{}).catch(err=>{console.log(err)});
+}
+exports.driverOffline=function(socket,data,arrDriver){
+    arrDriver.map(e=>{
+        if(e.user.id===socket.user.id){e.driver_status=3;}
+    })
+    userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
+}
 //g
 exports.updateStatusRequestWithDriver=function(socket,requestLocation,arrDriver){
 	var arrDistance=[];

@@ -42,12 +42,13 @@ io.on('connection', function (socket) {
     socket.location={};
     arr.push(socket);
     socket.driver_status=1;
+    socket.premission=true;
     console.log('==========================================================================');
-    console.log('*************=a user connected id= '+socket.id);
 
     socket.on('disconnect', function(){
-
-        console.log('*************=a user disconnected id= '+socket.id);
+        console.log('==========================================================================');
+        console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+" ] VUA OFFlINE");
+        console.log('==========================================================================');
         if(socket.user.userType===4)
         {
             userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
@@ -59,6 +60,16 @@ io.on('connection', function (socket) {
     socket.on("location_driver",function(data){
         if(socket.user.userType===4){
             socket.location=data;
+        }
+    });
+    socket.on("driver_online",function(data){
+        if(socket.user.userType===4){
+            driver.driverOnline(socket,data,arrDriver);
+        }
+    });
+    socket.on("driver_offline",function(data){
+        if(socket.user.userType===4){
+            driver.driverOffline(socket,data,arrDriver);
         }
     });
     socket.on("begin_trip",function(data){
@@ -98,6 +109,9 @@ io.on('connection', function (socket) {
                 if(rows.length>0)
                 {
                     socket.user=rows[0];
+                    console.log('==========================================================================');
+                    console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+" ] VUA ONLINE");
+                    console.log('==========================================================================');
                     if(socket.user.userType===4)
                     {
                         
