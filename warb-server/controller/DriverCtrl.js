@@ -143,3 +143,10 @@ exports.updateStatusRequestWithDriver=function(socket,requestLocation,arrDriver)
 	var arrDistance=getListDistance(arrDriver,requestLocation);
 	tripRepos.updateStatusRequestWithDriver(data).then(data=>{}).catch(err=>{console.log(err)});
 }
+exports.endTrips=function(socket,data,arrDriver){
+    tripRepos.updateTripStatus(data.id,5).then(data=>{}).catch(err=>{console.log(err)});
+    arrDriver.map(e=>{
+        if(e.user.id===socket.user.id){e.driver_status=1;}
+    })
+    userRepos.updateStausDriver(socket.user.id,1).then(data=>{}).catch(err=>{console.log(err)});
+}
