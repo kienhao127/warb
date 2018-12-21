@@ -72,6 +72,7 @@ var send_request=function(soket_driver,request,check)
 exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
 	 var arrDistance=[];
      var arrDistance=getListDistance(arrDriver,requestLocation);
+     tripRepos.updateTripStatus(requestLocation.id,3).then(data=>{}).catch(err=>{console.log(err)});
      if(arrDistance.length>0)
      {
      	var tt=0;

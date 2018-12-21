@@ -84,7 +84,11 @@ io.on('connection', function (socket) {
     });
     socket.on("request-client",function(data){
         arrRequest.push(data);
-        driver.sendRequestForDriver(socket,data,arrDriver);
+        if(data.status!=5){
+            driver.sendRequestForDriver(socket,data,arrDriver);
+        }else {
+            console.log("chuyen dy nay da hoan tat roi !!");
+        }  
     });
     //g
     socket.on("receive-request",function(data){
