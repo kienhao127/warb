@@ -1,5 +1,6 @@
 var userRepos=require('../repos/UserRepos.js');
 var tripRepos=require('../repos/TripRepos.js');
+var app=require('../app');
 var rad = function(x) {
   return x * Math.PI / 180;
 };
@@ -97,7 +98,10 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
      							if(e.user.id===arrDistance[t].user.id){e.driver_status=2;}
      						})
      						
-     						tripRepos.updateDriverId(requestLocation.id,arrDistance[t].user.id).then(data=>{}).catch(err=>{console.log(err)});
+     						tripRepos.updateDriverId(requestLocation.id,arrDistance[t].user.id).then(data=>{
+                                app.sendUpdate(arrDistance[t].user.id,"update_Driver_Id");
+                            }).catch(err=>{console.log(err)});
+                           
      						tripRepos.updateTripStatus(requestLocation.id,6).then(data=>{}).catch(err=>{console.log(err)});
      						userRepos.updateStausDriver(arrDistance[t].user.id,2).then(data=>{}).catch(err=>{console.log(err)});
      						tt=1;
@@ -142,11 +146,4 @@ exports.updateStatusRequestWithDriver=function(socket,requestLocation,arrDriver)
 	var arrDistance=[];
 	var arrDistance=getListDistance(arrDriver,requestLocation);
 	tripRepos.updateStatusRequestWithDriver(data).then(data=>{}).catch(err=>{console.log(err)});
-}
-exports.endTrips=function(socket,data,arrDriver){
-    tripRepos.updateTripStatus(data.id,5).then(data=>{}).catch(err=>{console.log(err)});
-    arrDriver.map(e=>{
-        if(e.user.id===socket.user.id){e.driver_status=1;}
-    })
-    userRepos.updateStausDriver(socket.user.id,1).then(data=>{}).catch(err=>{console.log(err)});
 }

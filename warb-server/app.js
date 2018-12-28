@@ -180,7 +180,12 @@ var guidata=(data,id,title)=>{
 var guidataForType=(data,title)=>{
    io.sockets.emit(title,data[0]);
 }
+var updateDriverById=(data,title)=>{
+  
+}
 module.exports.arrDriver=arrDriver;
+module.exports.updateDriverById=updateDriverById;
+
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
 module.exports.arrRequest=arrRequest
