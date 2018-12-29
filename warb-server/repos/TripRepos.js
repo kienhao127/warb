@@ -52,8 +52,3 @@ exports.addTrip=function(trip){
 	console.log(sql);
 	return db.write(sql);
 }
-exports.getListRequest=function(){
-    var sql = `select t.*, ta.id as statusId, ta.statusName, s.fullname as driverName, c.id as customerId, c.customerName, c.customerPhone, c.customerAddress from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN tripstatus ta ON t.status = ta.id LEFT JOIN staff s ON t.driverId=s.id`;
-	console.log(sql);
-	return db.write(sql);
-}
