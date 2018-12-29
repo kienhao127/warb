@@ -21,4 +21,8 @@ router.route('/getTripByStatus')
 
 router.route('/addCustomerAndTrip')
 .post(token.checkAccessToken,tripCtrl.addCustomerAndTrip);
+
+router.route('/getListRequest')
+.post(token.checkAccessToken,tripCtrl.getListRequest);
+
 module.exports = router;

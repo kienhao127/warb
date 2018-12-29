@@ -90,15 +90,6 @@ io.on('connection', function (socket) {
             console.log("chuyen dy nay da hoan tat roi !!");
         }  
     });
-    //g
-    socket.on("receive-request",function(data){
-        arrRequest.push(data);
-        driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
-    });
-    socket.on("refuse-request",function(data){
-        arrRequest.push(data);
-        driver.driverRefuseRequest(socket,data,arrDriver,arrRequest);
-    });
     // socket.on("accept_request",function(data){
     //     arrRequest.splice(arrRequest.indexOf(data),1);
     // });
