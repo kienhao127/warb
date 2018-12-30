@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var userRepos=require('./repos/UserRepos.js');
 var driver=require('./controller/DriverCtrl.js');
+var tripRepos=require('./repos/TripRepos.js');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -82,9 +83,13 @@ io.on('connection', function (socket) {
             driver.endTrip(socket,data,arrDriver);
         }
     });
+    socket.on("done_locationer",function(data){
+            driver.updateDoneLocation(data);
+    });
     socket.on("request-client",function(data){
         arrRequest.push(data);
-        if(data.status!=5){
+        console.log(data);
+        if(data.status===2){
             driver.sendRequestForDriver(socket,data,arrDriver);
         }else {
             console.log("chuyen dy nay da hoan tat roi !!");
@@ -180,11 +185,19 @@ var guidata=(data,id,title)=>{
 var guidataForType=(data,title)=>{
    io.sockets.emit(title,data[0]);
 }
-var updateDriverById=(data,title)=>{
-  
+var sendUpdate=(data,title)=>{
+  console.log(data);
+  tripRepos.getTripByTripId(data)
+  .then(rows=>{
+     console.log(rows[0]);
+    io.sockets.emit(title,rows[0]);
+  })
+  .catch(err=>{
+    console.log(err);
+  })
 }
 module.exports.arrDriver=arrDriver;
-module.exports.updateDriverById=updateDriverById;
+module.exports.sendUpdate=sendUpdate;
 
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
