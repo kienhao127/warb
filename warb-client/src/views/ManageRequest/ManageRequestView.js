@@ -2,8 +2,7 @@ import React from "react";
 import Table from "components/Table/Table.jsx";
 import { connect } from "react-redux";
 import { getAllTrip } from "../../store/actions/trip";
-import io from 'socket.io-client';
-const socket = io('http://localhost:8888')
+import {socket} from './../../Utils/FunctionHelper';
 
 const tableHead = [
   { id: 'id', label: 'Mã chuyến đi' },
@@ -60,6 +59,8 @@ class ManageRequestView extends React.Component {
         tableData={this.state.tableData}
         buttonContent={"Gửi đi"}
         onTableRowClick={(data)=>{
+          console.log('request-client', data);
+          socket.emit('request-client', data);
           // this.props.history.push("/dashboard/locaterequest",{infoTrip:data});
         }}
       />

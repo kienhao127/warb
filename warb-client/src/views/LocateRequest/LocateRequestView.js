@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import DialogCheckingLocation from "./DialogCheckingLocation";
 import { connect } from "react-redux";
 import Table from "components/Table/Table.jsx";
-import io from "socket.io-client";
+import {socket} from './../../Utils/FunctionHelper';
 import { getTripByStatus } from "../../store/actions/trip";
 const tableHead = [
   { id: "id", label: "Mã chuyến đi" },
@@ -13,7 +13,6 @@ const tableHead = [
   { id: "driverName", label: "Tài xế" },
   { id: "statusName", label: "Tình trạng" }
 ];
-const socket = io("http://localhost:8888");
 class LocateRequestView extends Component {
   constructor(props) {
     super(props);

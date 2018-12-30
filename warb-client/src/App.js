@@ -5,11 +5,10 @@ import Login from './views/Login/login'
 import DriverView from './views/Driver/DriverView'
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import './App.css';
-import io from 'socket.io-client';
 import { getUserByToken } from './store/actions/user';
 import { connect } from "react-redux";
 import Loading from './components/Loading/Loading';
-const socket = io('http://localhost:8888')
+import {socket} from './Utils/FunctionHelper';
 
 class App extends Component {
   constructor(props) {

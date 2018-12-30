@@ -6,8 +6,7 @@ import { connect } from "react-redux";
 import { login, getUserInfo } from "../../store/actions/user";
 import { Typography } from "@material-ui/core";
 import Loading from "components/Loading/Loading";
-import io from 'socket.io-client';
-const socket = io('http://localhost:8888')
+import {socket} from './../../Utils/FunctionHelper';
 
 class Login extends React.Component {
   constructor(props) {
