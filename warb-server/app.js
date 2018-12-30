@@ -90,7 +90,7 @@ io.on('connection', function (socket) {
         arrRequest.push(data);
         console.log(data);
         if(data.status===2){
-            driver.sendRequestForDriver(socket,data,arrDriver,io);
+            driver.sendRequestForDriver(socket,data,arrDriver);
         }else {
             console.log("chuyen dy nay da hoan tat roi !!");
         }  
@@ -139,36 +139,36 @@ io.on('connection', function (socket) {
 
 })
 app.get("/haha",(req,res)=>{
-    //  var user=[];
-    // if(arr.length>0)
-    // {
-    //     arr.map(e=>{
-    //        user.push({
-    //         socket:e.id,
-    //         userid:e.user.id,
-    //         username:e.user.username,
-    //         Type:e.user.userType
-    //        }); 
-    //     })
-    // }
-    // res.json({
-    //     socket:user
-    // });
-
-    var user=[];
-    if(arrDriver.length>0)
+     var user=[];
+    if(arr.length>0)
     {
-        arrDriver.map(e=>{
+        arr.map(e=>{
            user.push({
-            user:e.user,
-            location:e.location
+            socket:e.id,
+            userid:e.user.id,
+            username:e.user.username,
+            Type:e.user.userType
            }); 
         })
     }
     res.json({
-        arrDriver:arrDriver.length,
         socket:user
     });
+
+    // var user=[];
+    // if(arrDriver.length>0)
+    // {
+    //     arrDriver.map(e=>{
+    //        user.push({
+    //         user:e.user,
+    //         location:e.location
+    //        }); 
+    //     })
+    // }
+    // res.json({
+    //     arrDriver:arrDriver.length,
+    //     socket:user
+    // });
 })
 var guidata=(data,id,title)=>{
   console.log(data);
@@ -199,7 +199,7 @@ var sendUpdate=(data,title)=>{
 }
 module.exports.arrDriver=arrDriver;
 module.exports.sendUpdate=sendUpdate;
-module.exports.io=io;
+
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
 module.exports.arrRequest=arrRequest
