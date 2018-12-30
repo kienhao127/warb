@@ -45,8 +45,7 @@ var send_request=function(soket_driver,request,check)
 {
     return new Promise((resolve, reject) => {
     	var thoi_han=false;
-    	//soket_driver.emit("server_send_request",request);
-        io.sockets.emit("server_send_request",request,soket_driver.user.id);
+    	soket_driver.emit("server_send_request",request);
     	
     	var action=setTimeout(()=>{
             soket_driver.premission=false;
@@ -63,7 +62,7 @@ var send_request=function(soket_driver,request,check)
         });
         soket_driver.on("destroy_request",function(data){
             soket_driver.premission=false;
-           console.log(`===========> Driver ${soket_driver.user.username} đã hủy chuyến đy`);
+           console.log(`===========> Driver ${soket_driver.user.username} đã chấp nhận chuyến đy`);
            clearTimeout(action);
            thoi_han=true
            reject(thoi_han);
@@ -71,7 +70,7 @@ var send_request=function(soket_driver,request,check)
     })
 }
 
-exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,io){
+exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
 	 var arrDistance=[];
      var arrDistance=getListDistance(arrDriver,requestLocation);
      tripRepos.updateTripStatus(requestLocation.id,3).then(data=>{}).catch(err=>{console.log(err)});
@@ -91,7 +90,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,io){
      				if(tt==0)
      				{
      					if(arrDistance[t].driver_status===1){
-     					send_request(arrDistance[t],requestLocation,io)
+     					send_request(arrDistance[t],requestLocation)
      					.then(result=>{
                             console.log(`===========> Driver ${arrDistance[t].user.username} đã chấp nhận chuyến đy`);
      						console.log("ket thuc");
@@ -111,7 +110,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,io){
      					})
      					.catch(err=>{
      						console.log(err);
-     						console.log(`driver ${arrDistance[t].user.id}  khong nhan`);
+     						console.log("driver nay khong nhan");
      						t++;
      					});
      					}
