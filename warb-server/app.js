@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
         }
     });
     socket.on("done_locationer",function(data){
-            driver.updateDoneLocation(data);
+            driver.updateDoneLocation(data,socket);
     });
     socket.on("request-client",function(data){
         arrRequest.push(data);

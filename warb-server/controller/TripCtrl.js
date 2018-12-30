@@ -123,7 +123,7 @@ exports.addCustomerAndTrip=function(req,res){
                 tripLocation:lo,
                 tripLongitude:lng,
                 tripLatitude:lat,
-                status: 2,
+                status:1,
                 note: req.body.note,
                 requestTime:moment().format('x'),
                 isDelete:0
