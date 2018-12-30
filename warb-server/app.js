@@ -41,22 +41,24 @@ var io = require('socket.io').listen(server);
 io.on('connection', function (socket) {
     socket.user={id:0};
     socket.location={};
-    arr.push(socket);
+    
     socket.driver_status=1;
     socket.premission=true;
     console.log('==========================================================================');
 
     socket.on('disconnect', function(){
         console.log('==========================================================================');
-        console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+" ] VUA OFFlINE");
+        console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username +"("+socket.id+")"+" ] VUA OFFlINE");
         console.log('==========================================================================');
         if(socket.user.userType===4)
         {
             userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
         }
-        arr.splice(arr.indexOf(socket.id),1);
-        arrDriver.splice(arrDriver.indexOf(socket.id),1);
-
+        if(socket.user.id!=0){
+            arr.splice(arr.indexOf(socket.id),1);
+            arrDriver.splice(arrDriver.indexOf(socket.id),1);
+        }
+        
     });
     socket.on("location_driver",function(data){
         if(socket.user.userType===4){
@@ -117,9 +119,10 @@ io.on('connection', function (socket) {
             .then(rows=>{
                 if(rows.length>0)
                 {
+                    arr.push(socket);
                     socket.user=rows[0];
                     console.log('==========================================================================');
-                    console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+" ] VUA ONLINE");
+                    console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+"("+socket.id+")"+" ] VUA ONLINE");
                     console.log('==========================================================================');
                     if(socket.user.userType===4)
                     {
