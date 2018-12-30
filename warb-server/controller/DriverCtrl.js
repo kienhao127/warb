@@ -63,7 +63,7 @@ var send_request=function(soket_driver,request,check)
         });
         soket_driver.on("destroy_request",function(data){
             soket_driver.premission=false;
-           console.log(`===========> Driver ${soket_driver.user.username} đã chấp nhận chuyến đy`);
+           console.log(`===========> Driver ${soket_driver.user.username} đã hủy chuyến đy`);
            clearTimeout(action);
            thoi_han=true
            reject(thoi_han);
@@ -111,7 +111,7 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver,io){
      					})
      					.catch(err=>{
      						console.log(err);
-     						console.log("driver nay khong nhan");
+     						console.log(`driver ${arrDistance[t].user.id}  khong nhan`);
      						t++;
      					});
      					}

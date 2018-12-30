@@ -90,10 +90,19 @@ io.on('connection', function (socket) {
         arrRequest.push(data);
         console.log(data);
         if(data.status===2){
-            driver.sendRequestForDriver(socket,data,arrDriver);
+            driver.sendRequestForDriver(socket,data,arrDriver,io);
         }else {
             console.log("chuyen dy nay da hoan tat roi !!");
         }  
+    });
+    //g
+    socket.on("receive-request",function(data){
+        arrRequest.push(data);
+        driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
+    });
+    socket.on("refuse-request",function(data){
+        arrRequest.push(data);
+        driver.driverRefuseRequest(socket,data,arrDriver,arrRequest);
     });
     // socket.on("accept_request",function(data){
     //     arrRequest.splice(arrRequest.indexOf(data),1);
@@ -176,6 +185,7 @@ var guidata=(data,id,title)=>{
 var guidataForType=(data,title)=>{
    io.sockets.emit(title,data[0]);
 }
+
 var sendUpdate=(data,title)=>{
   console.log(data);
   tripRepos.getTripByTripId(data)
@@ -189,7 +199,7 @@ var sendUpdate=(data,title)=>{
 }
 module.exports.arrDriver=arrDriver;
 module.exports.sendUpdate=sendUpdate;
-
+module.exports.io=io;
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
 module.exports.arrRequest=arrRequest
