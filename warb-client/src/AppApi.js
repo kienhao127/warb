@@ -81,3 +81,12 @@ export function addCustomerAndTripApi(access_token, refresh_token, customerInfo,
     }
     return fetchApi('trip/addCustomerAndTrip', 'POST', body);
 }
+
+export function getTripByStatusApi(access_token, refresh_token, statusId){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        status: statusId,
+    }
+    return fetchApi('trip/getTripByStatus', 'POST', body);
+}

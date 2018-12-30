@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import tableStyle from "assets/jss/material-dashboard-react/components/tableStyle.jsx";
 import moment from 'moment';
+import { Button } from '@material-ui/core';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -159,7 +160,6 @@ class EnhancedTable extends React.Component {
                     return (
                       <TableRow
                         key={n[tableHead[0].id]}
-                        onClick={() => this.props.onTableRowClick(n)}
                       >
                         {this.props.checkbox ? 
                         <TableCell padding="checkbox" >
@@ -171,6 +171,14 @@ class EnhancedTable extends React.Component {
                             <TableCell className={classes.tableCell} padding="none" style={{ textDecoration: 'none' }}>{head.type === 'time' ? moment(n[head.id]).format('DD/MM/YYYY') : n[head.id]}</TableCell>
                           );
                         })}
+                         <TableCell padding="checkbox" >
+                          <Button 
+                            variant="contained" 
+                            color="primary" 
+                            style={{ fontSize: 12, color: 'white', width: 120 }} 
+                            disabled={n.statusId === 2 ? false : true}
+                            onClick={() => this.props.onTableRowClick(n)}>{this.props.buttonContent}</Button>
+                        </TableCell>
                       </TableRow>
                     );
                   })}

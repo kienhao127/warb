@@ -13,6 +13,7 @@ const tableHead = [
   { id: 'note', label: 'Ghi chú' },
   { id: 'driverName', label: 'Tài xế' },
   { id: 'statusName', label: 'Tình trạng' },
+  { id: '', label: '' },
 ];
 
 class ManageRequestView extends React.Component {
@@ -57,9 +58,9 @@ class ManageRequestView extends React.Component {
         tableTitleSecondary={this.state.tableTitleSecondary}
         tableHead={tableHead}
         tableData={this.state.tableData}
+        buttonContent={"Gửi đi"}
         onTableRowClick={(data)=>{
-          
-          this.props.history.push("/dashboard/locaterequest",{infoTrip:data});
+          // this.props.history.push("/dashboard/locaterequest",{infoTrip:data});
         }}
       />
     );
