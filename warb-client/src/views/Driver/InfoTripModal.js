@@ -1,21 +1,25 @@
 import React, { Component } from "react";
 import { CardContent, Button } from "@material-ui/core";
+import { socket } from "../../Utils/FunctionHelper";
 export default class InfoTripModal extends Component {
-  state = {
-    open: false
-  };
-  showPopup() {
-    this.setState({
-      open: true
-    });
+  
+  onAcceptTripClick = (receiveTripTime) => {
+    if (new Date().getTime() - receiveTripTime >= 10000){
+      alert('Đã quá thời hạn nhận chuyến!');
+    } else {
+      socket.emit('accept_request', true);
+    }
+   this.props.onModalStateChange();
+   this.props.onDriverAcceptTrip();
   }
-  closePopup() {
-    this.setState({
-      open: false
-    });
+
+  onCancelTripClick = () => {
+    socket.emit('destroy_request', true);
+    this.props.onModalStateChange();
   }
+
   render() {
-    const { tripInfo, open} = this.props;
+    const { tripInfo, open, receiveTripTime} = this.props;
     if (open == true){
       return (
         <div style={{
@@ -48,6 +52,7 @@ export default class InfoTripModal extends Component {
             <CardContent>
               <Button variant="contained" color="primary"
                 style={{ fontSize: 12, color: 'white', width: 120 }}
+                onClick={() => this.onAcceptTripClick(receiveTripTime)}
               >
                 Nhận chuyến
                 </Button>
@@ -55,6 +60,7 @@ export default class InfoTripModal extends Component {
             <CardContent>
               <Button variant="contained" color="secondary"
                 style={{ fontSize: 12, width: 120 }}
+                onClick={this.onCancelTripClick}
               >
                 Huỷ chuyến
                 </Button>
