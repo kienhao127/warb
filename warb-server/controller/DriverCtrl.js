@@ -1,10 +1,11 @@
 var userRepos=require('../repos/UserRepos.js');
 var tripRepos=require('../repos/TripRepos.js');
+require('dotenv').config();
 var app=require('../app');
 var rad = function(x) {
   return x * Math.PI / 180;
 };
-
+//process.env.num_N  parseInt("10")
 var getDistance = function(p1, p2) {
   var R = 6378137; //Haversine Earth’s mean radius in meter
   var p1lat=parseFloat(p1.lat);
@@ -79,18 +80,26 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
      {
      	var tt=0;
      	var t=0;
-     	for (var i=0;i<=arrDistance.length;i++) {
+        var N=parseInt(process.env.num_N);
+        var length=0
+        if(arrDistance.length<N){
+           length=arrDistance.length;
+        }else
+        {
+            length=N;
+        }
+     	for (var i=0;i<=length;i++) {
 
      		(function(ind) {
      			var action=setTimeout(function(){
-     				if(t==arrDistance.length)
+     				if(t===length)
      				{
      					tripRepos.updateTripStatus(requestLocation.id,7).then(data=>{
                              app.sendUpdate(requestLocation.id,"update_status_trip");
                         }).catch(err=>{console.log(err)});
      					tt=1;
      				}
-     				if(tt==0)
+     				if(tt===0)
      				{
      					if(arrDistance[t].driver_status===1){
      					send_request(arrDistance[t],requestLocation)
