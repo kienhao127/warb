@@ -32,9 +32,12 @@ class Driver extends Component {
     );
     if (distanceAllow) {
       this.setState({
-        lat: clickEvent.latLng.lat(),
-        lng: clickEvent.latLng.lng()
+        currentLocation: {
+          lat: clickEvent.latLng.lat(),
+          lng: clickEvent.latLng.lng()
+        }
       });
+      this.drawPolyline();
     } else {
       alert("Khoảng cách lớn hơn 100m");
     }
@@ -76,13 +79,19 @@ class Driver extends Component {
   }
   
   onDriverAcceptTrip = () => {
+    this.drawPolyline();
+  }
+
+  onDriverMoving = () => {
+    this.drawPolyline();
+  }
+
+  drawPolyline = () => {
     var endLoaction = {
       lat: this.state.currentTrip.tripLatitude,
       lng: this.state.currentTrip.tripLongitude,
     }
     var arrayLocation = [];
-    // var polyline = L.Polyline.fromEncoded(encoded);
-    // console.log(polyline);
     this.props.doGetArrayLocation(this.state.currentLocation, endLoaction)
     .then(resJson => {
      resJson.object.steps.map(step => {
