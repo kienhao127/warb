@@ -78,16 +78,16 @@ exports.sendRequestForDriver=function(socket,requestLocation,arrDriver){
      tripRepos.updateTripStatus(requestLocation.id,3).then(data=>{}).catch(err=>{console.log(err)});
      if(arrDistance.length>0)
      {
+        console.log(arrDistance.length);
      	var tt=0;
      	var t=0;
         var N=parseInt(process.env.num_N);
-        var length=0
-        if(arrDistance.length<N){
-           length=arrDistance.length;
-        }else
-        {
-            length=N;
+        console.log(N);
+        var length=arrDistance.length;
+        if(arrDistance.length > N){
+           length = N;
         }
+        console.log(length);
      	for (var i=0;i<=length;i++) {
 
      		(function(ind) {
