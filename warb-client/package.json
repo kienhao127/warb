@@ -9,6 +9,7 @@
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "perfect-scrollbar": "^1.4.0",
+    "polyline-encoded": "0.0.8",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-modal": "^3.6.1",
