@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Map, Marker, GoogleApiWrapper, Polyline } from "google-maps-react";
-import { AppBar, Tab, Tabs } from "@material-ui/core";
+import { AppBar, Tab, Tabs, Button, Toolbar, IconButton, Typography } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 import { haversineDistance } from "../../Utils/FunctionHelper";
 import InfoTripModal from "./InfoTripModal";
+import TripStatusModal from './TripStatusModal';
 import { socket } from './../../Utils/FunctionHelper';
 import { connect } from "react-redux";
 import { getArrayLocation } from "../../store/actions/trip";
@@ -19,6 +21,7 @@ class Driver extends Component {
       currentTrip: null,
       open: false,
       steps: [],
+      isTripStatusModelOpen: false,
     };
 
     socket.on('server_send_request', (data) => this.onReciveData(data));
@@ -61,11 +64,11 @@ class Driver extends Component {
     console.log('location', this.state.currentLocation);
     navigator.geolocation.getCurrentPosition(
       position => {
-          console.log(position.coords);
-          this.setState({
-            currentLocation: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
+        console.log(position.coords);
+        this.setState({
+          currentLocation: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
           }
         })
       })
@@ -77,9 +80,12 @@ class Driver extends Component {
       open: !this.state.open,
     })
   }
-  
+
   onDriverAcceptTrip = () => {
     this.drawPolyline();
+    this.setState({
+      isTripStatusModelOpen: true,
+    })
   }
 
   onDriverMoving = () => {
@@ -93,40 +99,48 @@ class Driver extends Component {
     }
     var arrayLocation = [];
     this.props.doGetArrayLocation(this.state.currentLocation, endLoaction)
-    .then(resJson => {
-     resJson.object.steps.map(step => {
-      var polyline = polyUtil.decode(step.polyline.points);
-      polyline.map(latlng => {
-        var location = {
-          lat: latlng[0],
-          lng: latlng[1],
-        }
-        arrayLocation.push(location);
-      })
-      console.log(arrayLocation);
-     })
+      .then(resJson => {
+        resJson.object.steps.map(step => {
+          var polyline = polyUtil.decode(step.polyline.points);
+          polyline.map(latlng => {
+            var location = {
+              lat: latlng[0],
+              lng: latlng[1],
+            }
+            arrayLocation.push(location);
+          })
+          console.log(arrayLocation);
+        })
 
-     this.setState({
-       steps: arrayLocation
-     })
+        this.setState({
+          steps: arrayLocation
+        })
+      })
+  }
+
+  onFinishTrip = () => {
+    this.setState({
+      isTripStatusModelOpen: false,
+      steps: []
     })
   }
 
   render() {
     const { lat, lng } = this.state.currentLocation;
     return (
-      <div>
-        <AppBar title="My App" centered>
-          <Tabs>
-            <Tab
-              label="Logout"
-              style={styles.tabStyle}
-              onClick={this.handleLogout}
-            />
-          </Tabs>
-        </AppBar>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={styles.root}>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6" color="inherit" style={styles.grow}>
+                Bản đồ
+          </Typography>
+              <Button style={styles.button} onClick={this.handleLogout}>Đăng xuất</Button>
+            </Toolbar>
+          </AppBar>
+        </div>
 
-        <div style={{ flex: 1, zIndex: 2 }}>
+        <div style={styles.mapStyle}>
           <Map
             google={this.props.google}
             zoom={14}
@@ -139,7 +153,6 @@ class Driver extends Component {
               lng: lng
             }}
             gestureHandling={"cooperative"}
-            style={styles.mapStyle}
             onClick={this.mapClicked.bind(this)}
           >
             <Polyline
@@ -157,23 +170,24 @@ class Driver extends Component {
           </Map>
         </div>
         <InfoTripModal onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
+        <TripStatusModal onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen}/>
       </div>
     );
   }
 }
 
 const styles = {
-  mapStyle: {
-    flex: 1,
-    paddingBottom: 50
+  root: {
+    flexGrow: 1,
   },
-  tabStyle: {
-    flex: 1,
-    textAlign: "center",
-    justifyContent: "center"
+  grow: {
+    flexGrow: 1,
+    color: '#FFFFFF'
+  },
+  button: {
+    color: '#FFFFFF'
   }
 };
-
 
 const mapDispatchToProps = dispatch => {
   return {
