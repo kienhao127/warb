@@ -42,7 +42,7 @@ io.on('connection', function (socket) {
     socket.user={id:0};
     socket.location={};
     
-    socket.driver_status=1;
+    socket.driver_status=0;
     socket.premission=true;
     console.log('==========================================================================');
 
@@ -52,7 +52,9 @@ io.on('connection', function (socket) {
         console.log('==========================================================================');
         if(socket.user.userType===4)
         {
-            userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
+            if(socket.driver_status!=2){
+               userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
+            }     
         }
         if(socket.user.id!=0){
             arr.splice(arr.indexOf(socket.id),1);
@@ -67,6 +69,7 @@ io.on('connection', function (socket) {
     });
     socket.on("driver_online",function(data){
         if(socket.user.userType===4){
+
             driver.driverOnline(socket,data,arrDriver);
         }
     });
@@ -121,6 +124,7 @@ io.on('connection', function (socket) {
                 {
                     arr.push(socket);
                     socket.user=rows[0];
+                    
                     console.log('==========================================================================');
                     console.log("$$$$$$$$$$$$$$$ USER : [ "+socket.user.username+"("+socket.id+")"+" ] VUA ONLINE");
                     console.log('==========================================================================');
@@ -128,7 +132,17 @@ io.on('connection', function (socket) {
                     {
                         
                         arrDriver.push(socket);
-                        userRepos.updateStausDriver(rows[0].id,1).then(data=>{}).catch(err=>{console.log(err)});
+                        userRepos.getDriverByRefreshToken(data)
+                        .then(result=>{
+                            if(result[0].status===2){
+                               socket.driver_status=2;
+                            }else {
+                                socket.driver_status=1;
+                                userRepos.updateStausDriver(rows[0].id,1).then(data=>{}).catch(err=>{console.log(err)});
+                            }
+                        })
+                        .catch(err=>console.log(err))
+                       
                         
                     }
                     //console.log(rows[0]);
