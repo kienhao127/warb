@@ -30,7 +30,7 @@ exports.getLatLong = function(req,res) {
 
 exports.getArrayLocation = function(req,res) {
    var address=req.body;
-   var stringUrl=`https://maps.googleapis.com/maps/api/directions/json?origin=${address.start_lat},${address.start_lng}&destination=${address.end_lat},${address.end_lng}&mode=transit&key=${process.env.key}`
+   var stringUrl=`https://maps.googleapis.com/maps/api/directions/json?origin=${address.start_lat},${address.start_lng}&destination=${address.end_lat},${address.end_lng}&transit_mode=bus&key=${process.env.key}`
    //var stringUrl=`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.key}`;
    var url = encodeURI(stringUrl); 
    mapRepo.getMapAPI(url)
