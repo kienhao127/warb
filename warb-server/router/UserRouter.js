@@ -19,6 +19,9 @@ router.route('/getUser')
 router.route('/getUserByToken') 
 .post(token.checkAccessToken,userCtrl.getUserByToken);
 
+router.route('/getStatusDriverByReToken') 
+.post(token.checkAccessToken,userCtrl.getStatusDriverByReToken);
+
 router.route('/getUserForType') 
 .post(token.checkAccessToken,userCtrl.getUserForType);
 

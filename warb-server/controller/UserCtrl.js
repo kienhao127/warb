@@ -24,6 +24,34 @@ exports.showAll = function(req,res) {
 		});
 	})
 };
+exports.getStatusDriverByReToken=function(req,res) {
+	var re_Token=req.body.refresh_token;
+	userRepo.getDriverByRefreshToken(re_Token)
+	.then(rows=>{
+		if(rows.length>0)
+		{
+			res.statusCode = 201;
+			res.json({
+				returnCode:1,
+				message:"get driver susscess",
+				object:rows[0]
+			});
+		}else{
+			res.json({
+				returnCode:0,
+				message:"not driver to get",
+				object:rows	
+			});
+		}
+	})
+	.catch(err=>{
+		res.json({
+				returnCode:0,
+				message:"get driver error",
+				error:err	
+			});
+	});
+}
 
 exports.getUser = function(req,res) {
 	var id_user=req.body.id;
