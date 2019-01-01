@@ -144,7 +144,9 @@ io.on('connection', function (socket) {
                                socket.driver_status=2;
                             }else {
                                 socket.driver_status=1;
-                                userRepos.updateStausDriver(rows[0].id,1).then(data=>{}).catch(err=>{console.log(err)});
+                                userRepos.updateStausDriver(rows[0].id,1).then(data=>{
+                                    socket.emit("done_update","true");
+                                }).catch(err=>{console.log(err)});
                             }
                         })
                         .catch(err=>console.log(err))
