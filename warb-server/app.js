@@ -105,9 +105,12 @@ io.on('connection', function (socket) {
         arrRequest.push(data);
         driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
     });
-    socket.on("refuse-request",function(data){
-        arrRequest.push(data);
-        driver.driverRefuseRequest(socket,data,arrDriver,arrRequest);
+    socket.on("get_Driver_By_Id",function(data){
+        userRepos.getDriverById(data)
+                        .then(result=>{
+                           socket.emit("get_status_driver",result[0]);
+                        })
+                        .catch(err=>console.log(err))
     });
     // socket.on("accept_request",function(data){
     //     arrRequest.splice(arrRequest.indexOf(data),1);

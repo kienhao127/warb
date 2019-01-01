@@ -32,11 +32,17 @@ exports.loadForType = function(difriend) {
 	}
 	
 }
+exports.getDriverById = function(id) {
+	var sql = `select * from driver where staffId  = '${id}'`;
+	console.log(sql);
+	return db.load(sql);
+}
 exports.getUserByRefreshToken = function(reToken) {
 	var sql = `select * from staff st ,token tk where tk.refresh_token = '${reToken}' and st.id=tk.id_user`;
 	console.log(sql);
 	return db.load(sql);
 }
+//from trip t INNER JOIN customer c ON t.customerId = c.id LEFT JOIN tripstatus ta ON t.status = ta.id LEFT JOIN staff s ON t.driverId=s.id ORDER BY t.requestTime DESC`; 
 exports.getDriverByRefreshToken = function(reToken) {
 	var sql = `select * from staff st ,token tk,driver v where tk.refresh_token = '${reToken}' and st.id=tk.id_user and st.id=v.staffId`;
 	console.log(sql);
