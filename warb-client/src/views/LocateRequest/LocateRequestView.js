@@ -76,10 +76,8 @@ class LocateRequestView extends Component {
         />
         
         <DialogCheckingLocation
-          ref={this.myRef}
           open={open}
           _closeDialog={this._closeDialog}
-        
         />
       </div>
     );
