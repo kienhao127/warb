@@ -126,6 +126,7 @@ io.on('connection', function (socket) {
                 if(rows.length>0)
                 {
                     arr.push(socket);
+                    console.log(rows)
                     socket.user=rows[0];
                     
                     console.log('==========================================================================');
@@ -136,7 +137,9 @@ io.on('connection', function (socket) {
                         
                         arrDriver.push(socket);
                         userRepos.getDriverByRefreshToken(data)
+
                         .then(result=>{
+                            console.log(result[0])
                             if(result[0].status===2){
                                socket.driver_status=2;
                             }else {
@@ -217,9 +220,20 @@ var sendUpdate=(data,title)=>{
     console.log(err);
   })
 }
+var sendDriverUpdate=(data,title)=>{
+  console.log(data);
+  tripRepos.getDriverById2(data)
+  .then(rows=>{
+     console.log(rows[0]);
+    io.sockets.emit(title,rows[0]);
+  })
+  .catch(err=>{
+    console.log(err);
+  })
+}
 module.exports.arrDriver=arrDriver;
 module.exports.sendUpdate=sendUpdate;
-
+module.exports.sendDriverUpdate=sendDriverUpdate;
 module.exports.guidata=guidata;
 module.exports.guidataForType=guidataForType;
 module.exports.arrRequest=arrRequest

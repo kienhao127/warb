@@ -37,8 +37,14 @@ exports.getDriverById = function(id) {
 	console.log(sql);
 	return db.load(sql);
 }
+exports.getDriverById2 = function(id) {
+	var sql = `select * from driver v,staff st where v.staffId=st.id and  staffId  = '${id}'`;
+	console.log(sql);
+	return db.load(sql);
+}
 exports.getUserByRefreshToken = function(reToken) {
-	var sql = `select * from staff st ,token tk where tk.refresh_token = '${reToken}' and st.id=tk.id_user`;
+	//var sql = `select * from staff st ,token tk where tk.refresh_token = '${reToken}' and st.id=tk.id_user`;
+	var sql=`select * from token tk INNER JOIN staff st ON tk.id_user=st.id LEFT JOIN driver v ON tk.id_user = v.staffId where tk.refresh_token = '${reToken}'`
 	console.log(sql);
 	return db.load(sql);
 }
