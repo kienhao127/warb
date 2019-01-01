@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import DialogCheckingLocation from "./DialogCheckingLocation";
 import { connect } from "react-redux";
 import Table from "components/Table/Table.jsx";
-import {socket} from './../../Utils/FunctionHelper';
+import { socket } from "./../../Utils/FunctionHelper";
 import { getTripByStatus } from "../../store/actions/trip";
 const tableHead = [
   { id: "id", label: "Mã chuyến đi" },
@@ -20,11 +20,12 @@ class LocateRequestView extends Component {
       tableTitle: "",
       tableTitleSecondary: "",
       tableData: [],
-      open:false,
-      infoTrip:{}
+      open: false,
+      infoTrip: {}
     };
+    socket.on('server_send_trip', (data) => this.onReciveData(data));
   }
-  
+
   componentDidMount() {
     this.props
       .doGetAllTripStatus()
@@ -37,14 +38,26 @@ class LocateRequestView extends Component {
         console.log("get all trip error");
       });
   }
-  _closeDialog=()=>{
+  _closeDialog = () => {
     this.setState({
-      open:false
+      open: false
+    });
+  };
+  passParam = data => {
+
+  };
+  
+  onReciveData = (data) => {
+    console.log("data from socket key server_send_trip", data);
+    var trips = this.state.tableData;
+    trips.push(data);
+    this.setState({
+      tableData: trips,
     })
   }
-  render() {
-    const { open,infoTrip } = this.state;
 
+  render() {
+    const { open, infoTrip } = this.state;
     return (
       <div>
         <Table
@@ -52,20 +65,19 @@ class LocateRequestView extends Component {
           tableTitleSecondary={this.state.tableTitleSecondary}
           tableHead={tableHead}
           tableData={this.state.tableData}
+          buttonContent={"Định Vị"}
+          unDisabledStatusId={1}
           onTableRowClick={data => {
             this.setState({
-              infoTrip:data
-            },()=>{
-              this.setState({
-                open:!open,
-              })
-            })
+              infoTrip: data,
+              open: !open
+            });
           }}
         />
+        
         <DialogCheckingLocation
-        open={open}
-        infoTrip={infoTrip}
-        _closeDialog={this._closeDialog}
+          open={open}
+          _closeDialog={this._closeDialog}
         />
       </div>
     );
@@ -81,7 +93,13 @@ const styles = {
 
 const mapDispatchToProps = dispatch => {
   return {
-    doGetAllTripStatus: () => dispatch(getTripByStatus(2))
+    doGetAllTripStatus: () => dispatch(getTripByStatus(1)),
+    saveInfoTrip: data => {
+      dispatch({
+        type: "SAVE_INFOTRIP",
+        infoTrip: data
+      });
+    }
   };
 };
 
