@@ -102,3 +102,16 @@ export function getArrayLocationApi(access_token, refresh_token, startLocation, 
     }
     return fetchApi('map/getArrayLocation','POST', body);
 }
+
+export function updateInfoTripByApi(access_token, refresh_token,id, tripLocation,tripLongitude,tripLatitude,status){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        id:id,
+        tripLocation: tripLocation,
+        tripLongitude:tripLongitude,
+        tripLatitude:tripLatitude,
+        status:status    
+    }
+    return fetchApi('trip/updateTrip', 'POST', body);
+}

@@ -3,7 +3,8 @@ import {
   getTripByDriverIdApi,
   addCustomerAndTripApi,
   getTripByStatusApi,
-  getArrayLocationApi
+  getArrayLocationApi,
+  updateInfoTripByApi
 } from "../../AppApi";
 
 export const getAllTrip = () => {
@@ -92,3 +93,32 @@ export const getArrayLocation = (startLocation, endLocation) => {
     return promise;
   };
 }
+
+export const updateInfoTrip = (
+  id,
+  tripLocation,
+  tripLongitude,
+  tripLatitude,
+  status
+) => {
+  return dispatch => {
+    const promise = new Promise((resolve, reject) => {
+      var access_token = sessionStorage.getItem("access_token");
+      var refresh_token = sessionStorage.getItem("refresh_token");
+      updateInfoTripByApi(
+        access_token,
+        refresh_token,
+        id,
+        tripLocation,
+        tripLongitude,
+        tripLatitude,
+        status
+      ).then(response => {
+        resolve(response)
+      }).catch((error)=>{
+        console.log(error)
+      });
+    });
+    return promise
+  };
+};

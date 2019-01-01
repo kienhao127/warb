@@ -1,21 +1,18 @@
 import React, { Component } from "react";
-import { Map, Marker, GoogleApiWrapper,Polyline } from "google-maps-react";
-import GridContainer from "../../components/Grid/GridContainer";
+import { Map, Marker, GoogleApiWrapper, Polyline } from "google-maps-react";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import Modal from "@material-ui/core/Modal";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, CardContent } from "@material-ui/core";
+import { updateInfoTrip } from "../../store/actions/trip";
+import { connect } from "react-redux";
 class DialogCheckingLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //   address: props.infoTrip.customerAddress,
-      //   lat: props.infoTrip.tripLatitude,
-      //   lng: props.infoTrip.tripLongitude
-      address: "ABC",
-      lat: 10.7797908,
-      lng: 106.6968302
+      address: '',
+      lat: 10.7627345, lng: 106.6822347
     };
   }
   mapClicked(mapProps, map, clickEvent) {
@@ -24,32 +21,24 @@ class DialogCheckingLocation extends Component {
       lng: clickEvent.latLng.lng()
     });
   }
-
-  handleClose = () => {
-    const { open } = this.props;
-    this.setState({ open: open });
+  _undateInfoTrip = () => {
+    // this.props.doUpdateTrip
   };
-
+  
   render() {
-    const { lat, lng } = this.state;
+    const { lat, lng, address } = this.state;
     const { classes } = this.props;
-    const triangleCoords = [
-        {lat: 10.7627345, lng: 106.6822347},
-        {lat: 10.7628653, lng: 106.6826189},
-        {lat: 10.7651904, lng: 106.6817614},
-        {lat: 10.7676356, lng: 106.6746287}
-      ];
+    const { infoTrip } = this.props;
     return (
       <Modal open={this.props.open} onClose={this.handleClose}>
         <div className={classes.paper}>
           <Card>
             <CardHeader color="primary">
               <h2>
-                THÔNG TIN ĐỊA CHỈ: {this.state.address}
+                THÔNG TIN ĐỊA CHỈ: {address}
               </h2>
             </CardHeader>
             <div style={{ flex: 1, height: window.innerHeight }}>
-            
               <Map
                 google={this.props.google}
                 zoom={14}
@@ -61,11 +50,6 @@ class DialogCheckingLocation extends Component {
                 style={styles.mapStyle}
                 onClick={this.mapClicked.bind(this)}
               >
-              <Polyline
-                path={triangleCoords}
-                strokeColor="#0000FF"
-                strokeOpacity={0.8}
-                strokeWeight={2} />
                 <Marker
                   onClick={() => {
                     alert(1);
@@ -76,8 +60,16 @@ class DialogCheckingLocation extends Component {
               </Map>
             </div>
           </Card>
-          <div style={{ display: "flex", flexDirection: "row",position:"absolute",bottom:10,right:10 }}>
-          <CardContent>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              position: "absolute",
+              bottom: 10,
+              right: 10
+            }}
+          >
+            <CardContent>
               <Button
                 variant="contained"
                 color="secondary"
@@ -108,14 +100,29 @@ const styles = theme => ({
     width: "100%",
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5]
-    //   margin: theme.spacing.unit * 4,
-    //   justifyContent:"center",
-    //   alignContent:"center"
   }
 });
+
+const mapDispatchToProps = dispatch => {
+  return {
+    doUpdateTrip: (id, tripLocation, tripLongitude, tripLatitude, status) =>
+      dispatch(
+        updateInfoTrip(id, tripLocation, tripLongitude, tripLatitude, status)
+      )
+  };
+};
+
 const DialogCheckingLocationWithStyle = withStyles(styles)(
   DialogCheckingLocation
 );
-export default GoogleApiWrapper({
+const DialogCheckingLocationWithMap = GoogleApiWrapper({
   apiKey: "AIzaSyBWvtNFhg1yB1_q8i8F0aEFdGrSh4O1rPQ"
 })(DialogCheckingLocationWithStyle);
+
+const mapStateToProps = (state) => {
+  return {
+    infoTrip:state.user.infoTrip
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DialogCheckingLocationWithMap);
