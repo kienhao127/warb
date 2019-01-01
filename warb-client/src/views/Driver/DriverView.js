@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Map, Marker, GoogleApiWrapper, Polyline } from "google-maps-react";
-import { AppBar, Tab, Tabs, Button, Toolbar, IconButton, Typography } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { AppBar, Menu, Button, Toolbar, MenuItem } from "@material-ui/core";
 import { haversineDistance } from "../../Utils/FunctionHelper";
 import InfoTripModal from "./InfoTripModal";
 import TripStatusModal from './TripStatusModal';
@@ -21,11 +20,22 @@ class Driver extends Component {
       currentTrip: null,
       open: false,
       steps: [],
-      isTripStatusModelOpen: false,
+      isTripStatusModelOpen: false, 
+      anchorEl: null,
+      isOnline: true, 
     };
 
     socket.on('server_send_request', (data) => this.onReciveData(data));
   }
+
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   mapClicked(mapProps, map, clickEvent) {
     const { lat, lng } = this.state.currentLocation;
     const distanceAllow = haversineDistance(
@@ -127,14 +137,40 @@ class Driver extends Component {
 
   render() {
     const { lat, lng } = this.state.currentLocation;
+    const { anchorEl } = this.state;
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={styles.root}>
           <AppBar position="static">
             <Toolbar>
-              <Typography variant="h6" color="inherit" style={styles.grow}>
-                Bản đồ
-          </Typography>
+            <div style={styles.grow}>
+              <Button
+                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleClick}
+                style={{color: '#FFF'}}
+              >
+              <div style={{flexDirection: 'column'}}>
+                    <div style={{width: 6, height: 6, color: 'green', borderRadius: 3}}/>
+                    Online
+                  </div>
+            
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={this.handleClose}
+              >
+                <MenuItem onClick={this.handleClose}>
+                  <div style={{flexDirection: 'column'}}>
+                    <div style={{width: 6, height: 6, color: 'green', borderRadius: 3}}/>
+                    Online
+                  </div>
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>Offline</MenuItem>
+              </Menu>
+            </div>
               <Button style={styles.button} onClick={this.handleLogout}>Đăng xuất</Button>
             </Toolbar>
           </AppBar>
@@ -170,7 +206,7 @@ class Driver extends Component {
           </Map>
         </div>
         <InfoTripModal onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
-        <TripStatusModal onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen}/>
+        <TripStatusModal onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen} tripInfo={this.state.currentTrip}/>
       </div>
     );
   }

@@ -14,6 +14,7 @@ export default class TripStatusModal extends Component {
         this.setState({
             isDriving: true,
         })
+        socket.emit('begin_trip', this.props.tripInfo);
     }
 
     onFinishTrip = () => {
@@ -21,6 +22,7 @@ export default class TripStatusModal extends Component {
             isDriving: false,
         })
         this.props.onFinishTrip();
+        socket.emit('end_trip', this.props.tripInfo);
     }
 
     render() {

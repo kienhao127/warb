@@ -58,6 +58,7 @@ class ManageRequestView extends React.Component {
         tableHead={tableHead}
         tableData={this.state.tableData}
         buttonContent={"Gửi đi"}
+        unDisabledStatusId={2}
         onTableRowClick={(data)=>{
           console.log('request-client', data);
           socket.emit('request-client', data);

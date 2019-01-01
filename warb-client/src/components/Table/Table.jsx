@@ -176,7 +176,7 @@ class EnhancedTable extends React.Component {
                             variant="contained" 
                             color="primary" 
                             style={{ fontSize: 12, color: 'white', width: 120 }} 
-                            disabled={n.statusId === 2 ? false : true}
+                            disabled={n.statusId === this.props.unDisabledStatusId ? false : true}
                             onClick={() => this.props.onTableRowClick(n)}>{this.props.buttonContent}</Button>
                         </TableCell>
                       </TableRow>
