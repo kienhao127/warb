@@ -6,32 +6,55 @@ import Modal from "@material-ui/core/Modal";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, CardContent } from "@material-ui/core";
 import { updateInfoTrip } from "../../store/actions/trip";
+import AlertDialog from "../../components/Dialog/AlertDialog";
 import { connect } from "react-redux";
 class DialogCheckingLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: '',
-      lat: 10.7627345, lng: 106.6822347
+      address: "",
+      lat: 10.7627345,
+      lng: 106.6822347,
+      isDialogOpen:false
     };
   }
   mapClicked(mapProps, map, clickEvent) {
-    this.setState({
+    const { updateTrip } = this.props;
+    updateTrip({
       lat: clickEvent.latLng.lat(),
       lng: clickEvent.latLng.lng()
     });
   }
-  _undateInfoTrip = () => {
-    // this.props.doUpdateTrip
+  _sentInfoTrip = () => {
+    const { info } = this.props;
+    const self = this
+    this.props.doUpdateTrip(
+      info.id,
+      info.tripLocation,
+      info.tripLongitude,
+      info.tripLatitude,
+      2
+    ).then(()=>{
+      self.setState({
+        isDialogOpen:true
+      })
+    })
   };
-  
+  handleClose=()=>{
+    const {removeTripUpdated,info} = this.props
+    this.setState({
+      isDialogOpen:false
+    },()=>{
+      removeTripUpdated(info.id)
+    })
+  }
   render() {
-    const { lat, lng, address } = this.state;
-    const { classes } = this.props;
-    const { infoTrip } = this.props;
+    const { address } = this.state;
+    const { classes, info } = this.props;
     return (
       <Modal open={this.props.open} onClose={this.handleClose}>
         <div className={classes.paper}>
+        <AlertDialog open={this.state.isDialogOpen} title="Thông báo" content={'Đã thay đổi trạng thái chuyến đi.'}  onClose={this.handleClose}/>
           <Card>
             <CardHeader color="primary">
               <h2>
@@ -43,19 +66,16 @@ class DialogCheckingLocation extends Component {
                 google={this.props.google}
                 zoom={14}
                 initialCenter={{
-                  lat: lat,
-                  lng: lng
+                  lat: info.tripLatitude,
+                  lng: info.tripLongitude
                 }}
                 gestureHandling={"cooperative"}
                 style={styles.mapStyle}
                 onClick={this.mapClicked.bind(this)}
               >
                 <Marker
-                  onClick={() => {
-                    alert(1);
-                  }}
                   name={"Current location"}
-                  position={{ lat: lat, lng: lng }}
+                  position={{ lat: info.tripLatitude, lng: info.tripLongitude }}
                 />
               </Map>
             </div>
@@ -84,6 +104,7 @@ class DialogCheckingLocation extends Component {
                 variant="contained"
                 color="primary"
                 style={{ fontSize: 12, color: "white", width: 120 }}
+                onClick={this._sentInfoTrip}
               >
                 Xác nhận
               </Button>
@@ -119,10 +140,12 @@ const DialogCheckingLocationWithMap = GoogleApiWrapper({
   apiKey: "AIzaSyBWvtNFhg1yB1_q8i8F0aEFdGrSh4O1rPQ"
 })(DialogCheckingLocationWithStyle);
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    infoTrip:state.user.infoTrip
+    infoTrip: state.user.infoTrip
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DialogCheckingLocationWithMap);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DialogCheckingLocationWithMap
+);

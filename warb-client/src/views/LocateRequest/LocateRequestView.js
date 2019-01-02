@@ -23,7 +23,7 @@ class LocateRequestView extends Component {
       open: false,
       infoTrip: {}
     };
-    socket.on('server_send_trip', (data) => this.onReciveData(data));
+    socket.on("server_send_trip", data => this.onReciveData(data));
   }
 
   componentDidMount() {
@@ -43,21 +43,37 @@ class LocateRequestView extends Component {
       open: false
     });
   };
-  passParam = data => {
-
+  updateTrip = info => {
+    const data = this.state.infoTrip;
+    data.tripLatitude = String(info.lat);
+    data.tripLongitude = String(info.lng);
+    data.tripLocation = String(info.lat) + "," + String(info.lng);
+    this.setState({
+      infoTrip: data
+    });
   };
-  
-  onReciveData = (data) => {
+  removeTripUpdated = id => {
+    const { tableData } = this.state;
+    const arrTrip = tableData.filter(trip => {
+      return trip.id !== id;
+    });
+    this.setState({
+      tableData: arrTrip,
+      open: false
+    });
+  };
+  onReciveData = data => {
     console.log("data from socket key server_send_trip", data);
     var trips = this.state.tableData;
     trips.push(data);
     this.setState({
-      tableData: trips,
-    })
-  }
+      tableData: trips
+    });
+  };
 
   render() {
     const { open, infoTrip } = this.state;
+
     return (
       <div>
         <Table
@@ -68,28 +84,31 @@ class LocateRequestView extends Component {
           buttonContent={"Định Vị"}
           unDisabledStatusId={1}
           onTableRowClick={data => {
-            this.setState({
-              infoTrip: data,
-              open: !open
-            });
+            this.setState(
+              {
+                infoTrip: data
+              },
+              () => {
+                this.setState({
+                  open: !this.state.open
+                });
+              }
+            );
           }}
         />
-        
         <DialogCheckingLocation
+          ref={"popupView"}
+          parentView={this}
           open={open}
           _closeDialog={this._closeDialog}
+          info={this.state.infoTrip}
+          updateTrip={this.updateTrip.bind(this)}
+          removeTripUpdated={this.removeTripUpdated.bind(this)}
         />
       </div>
     );
   }
 }
-
-const styles = {
-  mapStyle: {
-    flex: 1,
-    paddingBottom: 50
-  }
-};
 
 const mapDispatchToProps = dispatch => {
   return {
