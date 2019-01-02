@@ -7,6 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Button, CardContent } from "@material-ui/core";
 import { updateInfoTrip } from "../../store/actions/trip";
 import AlertDialog from "../../components/Dialog/AlertDialog";
+import {socket} from './../../Utils/FunctionHelper';
 import { connect } from "react-redux";
 class DialogCheckingLocation extends Component {
   constructor(props) {
@@ -35,6 +36,7 @@ class DialogCheckingLocation extends Component {
       info.tripLatitude,
       2
     ).then(()=>{
+      socket.emit("done_locationer",info.id)
       self.setState({
         isDialogOpen:true
       })

@@ -182,9 +182,3 @@ exports.driverOffline=function(socket,data,arrDriver){
     userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
     }    
 }
-//g
-exports.updateStatusRequestWithDriver=function(socket,requestLocation,arrDriver){
-	var arrDistance=[];
-	var arrDistance=getListDistance(arrDriver,requestLocation);
-	tripRepos.updateStatusRequestWithDriver(data).then(data=>{}).catch(err=>{console.log(err)});
-}

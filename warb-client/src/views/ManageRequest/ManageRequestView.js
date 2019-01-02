@@ -26,6 +26,7 @@ class ManageRequestView extends React.Component {
     };
 
     socket.on('server_send_trip', (data) => this.onReciveData(data));
+    socket.on('update_status_trip', (data) => this.onUpdateStatusTrip(data));
   }
 
   componentDidMount(){
@@ -49,6 +50,21 @@ class ManageRequestView extends React.Component {
     })
   }
 
+  onUpdateStatusTrip = (data) => {
+    console.log("data from socket key update_status_trip", data);
+    var trips = this.state.tableData;
+    trips.map(trip => {
+      if (trip.id === data.id){
+        trip.status = data.status;
+        trip.statusId = data.statusId;
+        trip.statusName = data.statusName;
+      }
+    })
+    this.setState({
+      tableData: trips
+    })
+  }
+
   render() {
     // const { classes } = this.props;
     return (
@@ -62,6 +78,18 @@ class ManageRequestView extends React.Component {
         onTableRowClick={(data)=>{
           console.log('request-client', data);
           socket.emit('request-client', data);
+          data.status = 3;
+          data.statusId = 3;
+          data.statusName = 'Đang gửi yêu cầu';
+          var trips = this.state.tableData;
+          trips.map(trip => {
+            if (trip.id === data.id){
+              trip = data;
+            }
+          })
+          this.setState({
+            tableData: trips
+          })
           // this.props.history.push("/dashboard/locaterequest",{infoTrip:data});
         }}
       />

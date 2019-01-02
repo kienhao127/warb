@@ -1,6 +1,6 @@
 import { SAVE_PROFILE } from './actiontype';
 import {
-    loginApi, getUserByTokenApi, getUserByIdApi, getUserForTypeApi
+    loginApi, getUserByTokenApi, getUserByIdApi, getUserForTypeApi, getStatusDriverByReTokenApi
 } from '../../AppApi';
 var md5 = require('md5');
 
@@ -17,7 +17,15 @@ export const login = (username, password) => {
                         sessionStorage.setItem('access_token', access_token);
                         sessionStorage.setItem('refresh_token', refresh_token);
                         var user = responseJson.user;
-                        dispatch(saveProfile(user));
+                        if (user.userType === 4){
+                            getStatusDriverByReTokenApi(access_token, refresh_token)
+                            .then(resJson => {
+                                user['status'] = resJson.object.status;
+                                dispatch(saveProfile(user));
+                            })
+                        } else {
+                            dispatch(saveProfile(user));
+                        }
                     }
                     dispatch(saveProfile(null));
                     resolve(responseJson);
@@ -40,7 +48,15 @@ export const getUserByToken = () => {
                     console.log('getUserByToken api response: ', responseJson);
                     if (responseJson.returnCode === 1) {
                         var user = responseJson.user;
-                        dispatch(saveProfile(user));
+                        if (user.userType === 4){
+                            getStatusDriverByReTokenApi(access_token, refresh_token)
+                            .then(resJson => {
+                                user['status'] = resJson.object.status;
+                                dispatch(saveProfile(user));
+                            })
+                        } else {
+                            dispatch(saveProfile(user));
+                        }
                     }
                     resolve(responseJson);
                 })
@@ -61,7 +77,15 @@ export const getUserInfo = (id) => {
                 console.log('getUserInfo api response: ', responseJson);
                 if (responseJson.returnCode === 1) {
                     var user = responseJson.user;
-                    dispatch(saveProfile(user));
+                    if (user.userType === 4){
+                        getStatusDriverByReTokenApi(access_token, refresh_token)
+                        .then(resJson => {
+                            user['status'] = resJson.object.status;
+                            dispatch(saveProfile(user));
+                        })
+                    } else {
+                        dispatch(saveProfile(user));
+                    }
                 }
             })
             .catch((error) => {
@@ -94,3 +118,4 @@ export const saveProfile = (profile) => {
         profile: profile
     };
 }
+

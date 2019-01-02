@@ -115,3 +115,11 @@ export function updateInfoTripByApi(access_token, refresh_token,id, tripLocation
     }
     return fetchApi('trip/updateTrip', 'POST', body);
 }
+
+export function getStatusDriverByReTokenApi(access_token, refresh_token){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+    }
+    return fetchApi('user/getStatusDriverByReToken', 'POST', body);
+}
