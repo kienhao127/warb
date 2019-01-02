@@ -100,11 +100,6 @@ io.on('connection', function (socket) {
             console.log("chuyen dy nay da hoan tat roi !!");
         }  
     });
-    //g
-    socket.on("receive-request",function(data){
-        arrRequest.push(data);
-        driver.sendRequestForDriver10s(socket,data,arrDriver,arrRequest);
-    });
     socket.on("get_Driver_By_Id",function(data){
         userRepos.getDriverById(data)
                         .then(result=>{
