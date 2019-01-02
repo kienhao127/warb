@@ -27,7 +27,7 @@ exports.loadTripFull=function(cus){
 	return db.write(sql);
 }
 exports.saveLocation=function(requestLocation,idDriver){
-	var sql = `update driver set longitude = '${requestLocation.tripLongitude}',latitude='${requestLocation.tripLatitude}' where staffId = ${idDriver}`;
+	var sql = `update driver set lastTripId=${requestLocation.id} ,longitude = '${requestLocation.tripLongitude}',latitude='${requestLocation.tripLatitude}' where staffId = ${idDriver}`;
 	console.log(sql);
 	return db.write(sql);
 }

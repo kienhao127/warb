@@ -18,6 +18,8 @@ router.route('/getAllTrip')
 
 router.route('/getTripByStatus')
 .post(token.checkAccessToken,tripCtrl.getTripByStatus);
+router.route('/getTripById')
+.post(token.checkAccessToken,tripCtrl.getTripById);
 
 router.route('/addCustomerAndTrip')
 .post(token.checkAccessToken,tripCtrl.addCustomerAndTrip);
