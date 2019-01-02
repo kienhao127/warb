@@ -7,7 +7,7 @@ exports.updateTripLocation = function(trip) {
 
 exports.updateTripStatus = function(id,status) {
 	var sql = `update trip set status = ${status} where id = ${id}`;
-	console.log(sql);
+	console.log('updateTripStatus_sql', sql);
 	return db.write(sql);
 }
 exports.updateDriverId = function(id,driverid) {

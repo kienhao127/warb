@@ -203,6 +203,7 @@ exports.updateTripStatus = function(req,res) {
         id: req.body.tripId,
         status: req.body.tripStatus
     }
+    console.log('updateTripStatus', trip);
     tripRepo.updateTripStatus(trip)
     .then(body => {
         var c = {
