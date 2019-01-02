@@ -11,24 +11,25 @@ class DialogCheckingLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: '',
-      lat: 10.7627345, lng: 106.6822347
+      address: "",
+      lat: 10.7627345,
+      lng: 106.6822347
     };
   }
   mapClicked(mapProps, map, clickEvent) {
-    this.setState({
+    const { updateTrip } = this.props;
+    updateTrip({
       lat: clickEvent.latLng.lat(),
       lng: clickEvent.latLng.lng()
     });
-  }
-  _undateInfoTrip = () => {
-    // this.props.doUpdateTrip
-  };
   
+  }
+  _sentInfoTrip = () => {
+   
+  };
   render() {
-    const { lat, lng, address } = this.state;
-    const { classes } = this.props;
-    const { infoTrip } = this.props;
+    const {  address } = this.state;
+    const { classes, info } = this.props;
     return (
       <Modal open={this.props.open} onClose={this.handleClose}>
         <div className={classes.paper}>
@@ -43,8 +44,8 @@ class DialogCheckingLocation extends Component {
                 google={this.props.google}
                 zoom={14}
                 initialCenter={{
-                  lat: lat,
-                  lng: lng
+                  lat: info.tripLatitude,
+                  lng: info.tripLongitude
                 }}
                 gestureHandling={"cooperative"}
                 style={styles.mapStyle}
@@ -55,7 +56,7 @@ class DialogCheckingLocation extends Component {
                     alert(1);
                   }}
                   name={"Current location"}
-                  position={{ lat: lat, lng: lng }}
+                  position={{ lat: info.tripLatitude, lng: info.tripLongitude }}
                 />
               </Map>
             </div>
@@ -119,10 +120,12 @@ const DialogCheckingLocationWithMap = GoogleApiWrapper({
   apiKey: "AIzaSyBWvtNFhg1yB1_q8i8F0aEFdGrSh4O1rPQ"
 })(DialogCheckingLocationWithStyle);
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    infoTrip:state.user.infoTrip
+    infoTrip: state.user.infoTrip
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DialogCheckingLocationWithMap);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DialogCheckingLocationWithMap
+);
