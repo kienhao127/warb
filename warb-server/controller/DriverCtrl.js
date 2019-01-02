@@ -169,7 +169,9 @@ exports.driverOnline=function(socket,data,arrDriver){
         if(e.user.id===socket.user.id){e.driver_status=1;}
         
     })
-   userRepos.updateStausDriver(socket.user.id,1).then(data=>{}).catch(err=>{console.log(err)});
+   userRepos.updateStausDriver(socket.user.id,1).then(data=>{
+    app.sendDriverUpdate(socket.user.id,"update_status_driver")
+   }).catch(err=>{console.log(err)});
     }
     
 }
@@ -179,6 +181,8 @@ exports.driverOffline=function(socket,data,arrDriver){
         if(e.user.id===socket.user.id){e.driver_status=3;}
         
     })
-    userRepos.updateStausDriver(socket.user.id,3).then(data=>{}).catch(err=>{console.log(err)});
+    userRepos.updateStausDriver(socket.user.id,3).then(data=>{
+        app.sendDriverUpdate(socket.user.id,"update_status_driver")
+    }).catch(err=>{console.log(err)});
     }    
 }
