@@ -1,6 +1,6 @@
 import { SAVE_PROFILE } from './actiontype';
 import {
-    loginApi, getUserByTokenApi, getUserByIdApi, getUserForTypeApi, getStatusDriverByReTokenApi
+    loginApi, getUserByTokenApi, getUserByIdApi, getUserForTypeApi, getStatusDriverByReTokenApi, getTripByIdApi
 } from '../../AppApi';
 var md5 = require('md5');
 
@@ -51,8 +51,20 @@ export const getUserByToken = () => {
                         if (user.userType === 4){
                             getStatusDriverByReTokenApi(access_token, refresh_token)
                             .then(resJson => {
+                                console.log(resJson);
                                 user['status'] = resJson.object.status;
-                                dispatch(saveProfile(user));
+                                user['lastTripId'] = resJson.object.lastTripId;
+                                getTripByIdApi(access_token, refresh_token, resJson.object.lastTripId)
+                                .then(responseJson => {
+                                    console.log(responseJson);
+                                    user['lastTripStatus'] = responseJson.object.status; 
+                                    user['lastTripLocation'] = {lat: responseJson.object.tripLatitude, lng: responseJson.object.tripLongitude};
+                                    user['lastTrip'] = responseJson.object;
+                                    dispatch(saveProfile(user));
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                });
                             })
                         } else {
                             dispatch(saveProfile(user));

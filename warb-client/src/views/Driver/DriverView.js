@@ -28,15 +28,16 @@ class Driver extends Component {
       isOnline: -1, 
     };
     socket.on('server_send_request', (data) => this.onReciveData(data));
+    socket.on('update_status_driver', (data) => this.onReciveDriverStatus(data));
   }
 
   handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ anchorEl: this.props.userProfile.status === 2 ? null : event.currentTarget });
   };
 
-  handleClose = () => {
+  handleClose = (status) => {
     this.setState({ anchorEl: null });
-    if (this.props.userProfile.status === 1){
+    if (status === 'ONLINE'){
       socket.emit('driver_online', true);
       this.setState({
         isOnline: true,
@@ -79,6 +80,13 @@ class Driver extends Component {
     })
   }
 
+  onReciveDriverStatus = (data) => {
+    console.log("data from socket key update_status_driver", data);
+    this.setState({
+      driverStatus: data.status
+    })
+  }
+
   handleLogout = () => {
     sessionStorage.removeItem("access_token");
     this.props.history.push("/");
@@ -99,8 +107,39 @@ class Driver extends Component {
     socket.emit('location_driver', this.state.currentLocation);
     if (this.props.userProfile != null)
     socket.emit('get_Driver_By_Id', this.props.userProfile.id);
-    console.log(this.props.userProfile);
+    console.log('userProfile', this.props.userProfile);
   }
+
+  componentWillReceiveProps(newProps) {    
+    console.log('Component WILL RECIEVE PROPS!', newProps)
+    //Đã có xe nhận
+    if (newProps.userProfile){
+      console.log('newProps.userProfile WILL RECIEVE PROPS', newProps.userProfile);
+      this.setState({
+        driverStatus: newProps.userProfile.status
+      })
+    }
+    if (this.props.userProfile && this.props.userProfile.lastTripStatus === 6){
+      console.log('this.props.userProfile.lastTripStatus');
+      if (this.state.currentTrip === null){
+        var endLoaction = {
+          lat: this.props.userProfile.lastTripLocation.lat,
+          lng: this.props.userProfile.lastTripLocation.lng,
+        }
+        this.setState({
+          currentTrip: this.props.userProfile.lastTrip,
+          isTripStatusModelOpen: true
+        })
+        this.drawPolyline(endLoaction);
+      }
+    }
+    if (this.props.userProfile && this.props.userProfile.lastTripStatus === 4){
+      this.setState({
+        currentTrip: this.props.userProfile.lastTrip,
+        isTripStatusModelOpen: true
+      })
+    }
+ }
 
   onModalStateChange = () => {
     this.setState({
@@ -109,40 +148,50 @@ class Driver extends Component {
   }
 
   onDriverAcceptTrip = () => {
-    this.drawPolyline();
+    var endLoaction = {
+      lat: this.state.currentTrip.tripLatitude,
+      lng: this.state.currentTrip.tripLongitude,
+    }
+    this.drawPolyline(endLoaction);
     this.setState({
       isTripStatusModelOpen: true,
     })
   }
 
   onDriverMoving = () => {
-    this.drawPolyline();
-  }
-
-  drawPolyline = () => {
     var endLoaction = {
       lat: this.state.currentTrip.tripLatitude,
       lng: this.state.currentTrip.tripLongitude,
     }
+    this.drawPolyline(endLoaction);
+  }
+
+  drawPolyline = (endLoaction) => {
+    console.log('start', this.state.currentLocation);
+    console.log('end', endLoaction);
     var arrayLocation = [];
     this.props.doGetArrayLocation(this.state.currentLocation, endLoaction)
       .then(resJson => {
-        resJson.object.steps.map(step => {
-          var polyline = polyUtil.decode(step.polyline.points);
-          polyline.map(latlng => {
-            var location = {
-              lat: latlng[0],
-              lng: latlng[1],
-            }
-            arrayLocation.push(location);
+        console.log('doGetArrayLocation' ,resJson);
+        if (resJson.returnCode !== 0){
+          resJson.object.steps.map(step => {
+            var polyline = polyUtil.decode(step.polyline.points);
+            polyline.map(latlng => {
+              var location = {
+                lat: latlng[0],
+                lng: latlng[1],
+              }
+              arrayLocation.push(location);
+            })
+            console.log(arrayLocation);
           })
-          console.log(arrayLocation);
-        })
 
-        this.setState({
-          steps: arrayLocation
-        })
+          this.setState({
+            steps: arrayLocation
+          })
+        }
       })
+      .catch(error => console.log(error));
   }
 
   onFinishTrip = () => {
@@ -154,7 +203,7 @@ class Driver extends Component {
 
   render() {
     const { lat, lng } = this.state.currentLocation;
-    const { anchorEl } = this.state;
+    const { anchorEl, driverStatus } = this.state;
     const {userProfile} = this.props;
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -173,7 +222,7 @@ class Driver extends Component {
                   style={{color: '#FFF'}}
                 >
                   <div style={{marginRight: 10, fontSize: 20}}>{userProfile.fullname}</div>
-                  <Status status={this.props.userProfile.status} />
+                  <Status status={driverStatus} />
                 </Button>
               </div>
               : null }
@@ -182,13 +231,13 @@ class Driver extends Component {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
               >
-                <MenuItem onClick={this.handleClose}>
+                <MenuItem onClick={() => this.handleClose('ONLINE')}>
                   <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     <div style={{marginRight: 10, }}>Online</div>
                     <Status status={1} />
                   </div>
                 </MenuItem>
-                <MenuItem onClick={this.handleClose}>
+                <MenuItem onClick={() => this.handleClose('OFFLINE')}>
                   <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     <div style={{marginRight: 10, }}>Offline</div>
                     <Status status={3} />

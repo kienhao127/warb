@@ -4,7 +4,8 @@ import {
   addCustomerAndTripApi,
   getTripByStatusApi,
   getArrayLocationApi,
-  updateInfoTripByApi
+  updateInfoTripByApi,
+  getTripById
 } from "../../AppApi";
 
 export const getAllTrip = () => {
@@ -122,3 +123,4 @@ export const updateInfoTrip = (
     return promise
   };
 };
+

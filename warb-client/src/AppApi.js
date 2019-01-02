@@ -123,3 +123,12 @@ export function getStatusDriverByReTokenApi(access_token, refresh_token){
     }
     return fetchApi('user/getStatusDriverByReToken', 'POST', body);
 }
+
+export function getTripByIdApi(access_token, refresh_token, tripId){
+    var body = {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        tripId: tripId
+    }
+    return fetchApi('trip/getTripById', 'POST', body);
+}

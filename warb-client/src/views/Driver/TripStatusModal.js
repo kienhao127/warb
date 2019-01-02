@@ -40,7 +40,7 @@ export default class TripStatusModal extends Component {
                 }}>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Button variant="contained" color="primary"
-                            disabled={this.state.isDriving ? true : false}
+                            disabled={this.props.tripInfo.status === 4 ? true : false}
                             style={{ fontSize: 12, color: 'white', width: 120, margin: 10 }}
                             onClick={this.onStartTrip}
                         >
@@ -48,7 +48,7 @@ export default class TripStatusModal extends Component {
                         </Button>
 
                         <Button variant="contained" color="secondary"
-                            disabled={this.state.isDriving ? false : true}
+                            disabled={this.props.tripInfo.status === 4 ? false : true}
                             style={{ fontSize: 12, width: 120, margin: 10 }}
                             onClick={this.onFinishTrip}
                         >
