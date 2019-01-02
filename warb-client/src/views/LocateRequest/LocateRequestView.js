@@ -44,16 +44,24 @@ class LocateRequestView extends Component {
     });
   };
   updateTrip = info => {
-    const data = this.state.infoTrip
-    data.tripLatitude = String(info.lat)
-    data.tripLongitude = String(info.lng)
-    data.tripLocation = String(info.lat) + ',' + String(info.lng)
-    console.log(this.state.infoTrip)
+    const data = this.state.infoTrip;
+    data.tripLatitude = String(info.lat);
+    data.tripLongitude = String(info.lng);
+    data.tripLocation = String(info.lat) + "," + String(info.lng);
     this.setState({
       infoTrip: data
     });
   };
-
+  removeTripUpdated = id => {
+    const { tableData } = this.state;
+    const arrTrip = tableData.filter(trip => {
+      return trip.id !== id;
+    });
+    this.setState({
+      tableData: arrTrip,
+      open: false
+    });
+  };
   onReciveData = data => {
     console.log("data from socket key server_send_trip", data);
     var trips = this.state.tableData;
@@ -95,6 +103,7 @@ class LocateRequestView extends Component {
           _closeDialog={this._closeDialog}
           info={this.state.infoTrip}
           updateTrip={this.updateTrip.bind(this)}
+          removeTripUpdated={this.removeTripUpdated.bind(this)}
         />
       </div>
     );

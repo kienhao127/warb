@@ -6,6 +6,7 @@ import Modal from "@material-ui/core/Modal";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, CardContent } from "@material-ui/core";
 import { updateInfoTrip } from "../../store/actions/trip";
+import AlertDialog from "../../components/Dialog/AlertDialog";
 import { connect } from "react-redux";
 class DialogCheckingLocation extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class DialogCheckingLocation extends Component {
     this.state = {
       address: "",
       lat: 10.7627345,
-      lng: 106.6822347
+      lng: 106.6822347,
+      isDialogOpen:false
     };
   }
   mapClicked(mapProps, map, clickEvent) {
@@ -22,17 +24,37 @@ class DialogCheckingLocation extends Component {
       lat: clickEvent.latLng.lat(),
       lng: clickEvent.latLng.lng()
     });
-  
   }
   _sentInfoTrip = () => {
-   
+    const { info } = this.props;
+    const self = this
+    this.props.doUpdateTrip(
+      info.id,
+      info.tripLocation,
+      info.tripLongitude,
+      info.tripLatitude,
+      2
+    ).then(()=>{
+      self.setState({
+        isDialogOpen:true
+      })
+    })
   };
+  handleClose=()=>{
+    const {removeTripUpdated,info} = this.props
+    this.setState({
+      isDialogOpen:false
+    },()=>{
+      removeTripUpdated(info.id)
+    })
+  }
   render() {
-    const {  address } = this.state;
+    const { address } = this.state;
     const { classes, info } = this.props;
     return (
       <Modal open={this.props.open} onClose={this.handleClose}>
         <div className={classes.paper}>
+        <AlertDialog open={this.state.isDialogOpen} title="Thông báo" content={'Đã thay đổi trạng thái chuyến đi.'}  onClose={this.handleClose}/>
           <Card>
             <CardHeader color="primary">
               <h2>
@@ -52,9 +74,6 @@ class DialogCheckingLocation extends Component {
                 onClick={this.mapClicked.bind(this)}
               >
                 <Marker
-                  onClick={() => {
-                    alert(1);
-                  }}
                   name={"Current location"}
                   position={{ lat: info.tripLatitude, lng: info.tripLongitude }}
                 />
@@ -85,6 +104,7 @@ class DialogCheckingLocation extends Component {
                 variant="contained"
                 color="primary"
                 style={{ fontSize: 12, color: "white", width: 120 }}
+                onClick={this._sentInfoTrip}
               >
                 Xác nhận
               </Button>
