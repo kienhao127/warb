@@ -8,6 +8,9 @@ import { socket } from './../../Utils/FunctionHelper';
 import { connect } from "react-redux";
 import { getArrayLocation } from "../../store/actions/trip";
 import polyUtil from 'polyline-encoded';
+import Avatar from './../../components/Avatar/Avatar';
+import Status from './../../components/Status/Status';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
 
 class Driver extends Component {
   constructor(props) {
@@ -22,9 +25,8 @@ class Driver extends Component {
       steps: [],
       isTripStatusModelOpen: false, 
       anchorEl: null,
-      isOnline: true, 
+      isOnline: -1, 
     };
-
     socket.on('server_send_request', (data) => this.onReciveData(data));
   }
 
@@ -34,6 +36,17 @@ class Driver extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+    if (this.props.userProfile.status === 1){
+      socket.emit('driver_online', true);
+      this.setState({
+        isOnline: true,
+      })
+    } else {
+      socket.emit('driver_offline', false);
+      this.setState({
+        isOnline: false,
+      })
+    }
   };
 
   mapClicked(mapProps, map, clickEvent) {
@@ -50,7 +63,9 @@ class Driver extends Component {
           lng: clickEvent.latLng.lng()
         }
       });
-      this.drawPolyline();
+      if (this.props.userProfile.status === 2){
+        this.drawPolyline();
+      }
     } else {
       alert("Khoảng cách lớn hơn 100m");
     }
@@ -60,7 +75,6 @@ class Driver extends Component {
     console.log("data from socket key server_send_request", data);
     this.setState({
       currentTrip: data,
-      location: data.tripLocation,
       open: true
     })
   }
@@ -83,6 +97,9 @@ class Driver extends Component {
         })
       })
     socket.emit('location_driver', this.state.currentLocation);
+    if (this.props.userProfile != null)
+    socket.emit('get_Driver_By_Id', this.props.userProfile.id);
+    console.log(this.props.userProfile);
   }
 
   onModalStateChange = () => {
@@ -138,40 +155,50 @@ class Driver extends Component {
   render() {
     const { lat, lng } = this.state.currentLocation;
     const { anchorEl } = this.state;
+    const {userProfile} = this.props;
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={styles.root}>
           <AppBar position="static">
             <Toolbar>
-            <div style={styles.grow}>
-              <Button
-                aria-owns={anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleClick}
-                style={{color: '#FFF'}}
-              >
-              <div style={{flexDirection: 'column'}}>
-                    <div style={{width: 6, height: 6, color: 'green', borderRadius: 3}}/>
-                    Online
-                  </div>
-            
-              </Button>
+            <div style={styles.root}>
+
+            {userProfile != null && userProfile != undefined ?
+              <div style={styles.grow}>
+                <Avatar width={40} content={userProfile.fullname} colorString={userProfile.phone}/>
+                <Button
+                  aria-owns={anchorEl ? 'simple-menu' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleClick}
+                  style={{color: '#FFF'}}
+                >
+                  <div style={{marginRight: 10, fontSize: 20}}>{userProfile.fullname}</div>
+                  <Status status={this.props.userProfile.status} />
+                </Button>
+              </div>
+              : null }
               <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={this.handleClose}
               >
                 <MenuItem onClick={this.handleClose}>
-                  <div style={{flexDirection: 'column'}}>
-                    <div style={{width: 6, height: 6, color: 'green', borderRadius: 3}}/>
-                    Online
+                  <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{marginRight: 10, }}>Online</div>
+                    <Status status={1} />
                   </div>
                 </MenuItem>
-                <MenuItem onClick={this.handleClose}>Offline</MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <div style={{display:'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <div style={{marginRight: 10, }}>Offline</div>
+                    <Status status={3} />
+                  </div>
+                </MenuItem>
               </Menu>
             </div>
-              <Button style={styles.button} onClick={this.handleLogout}>Đăng xuất</Button>
+              <Button style={styles.button} onClick={this.handleLogout}>
+                <LogoutIcon style={{fontSize: 30}}/>
+              </Button>
             </Toolbar>
           </AppBar>
         </div>
@@ -179,7 +206,7 @@ class Driver extends Component {
         <div style={styles.mapStyle}>
           <Map
             google={this.props.google}
-            zoom={14}
+            zoom={16}
             initialCenter={{
               lat: lat,
               lng: lng
@@ -215,14 +242,26 @@ class Driver extends Component {
 const styles = {
   root: {
     flexGrow: 1,
+    display:'flex', 
+    flexDirection: 'row',
   },
   grow: {
     flexGrow: 1,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    display:'flex', 
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
+    alignItems: 'flex-start'
   },
   button: {
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   }
+};
+
+const mapStateToProps = state => {
+  return {
+    userProfile: state.user.profile,
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -233,4 +272,4 @@ const mapDispatchToProps = dispatch => {
 
 export default GoogleApiWrapper({
   apiKey: "AIzaSyBWvtNFhg1yB1_q8i8F0aEFdGrSh4O1rPQ"
-})((connect(null, mapDispatchToProps)(Driver)));
+})((connect(mapStateToProps, mapDispatchToProps)(Driver)));

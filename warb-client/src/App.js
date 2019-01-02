@@ -21,6 +21,22 @@ class App extends Component {
     socket.on('token', data => {
       sessionStorage.setItem('access_token', data);
     });
+    socket.on('done_update', data => {
+      if (data){
+        if (sessionStorage.getItem('access_token') !== null) {
+          this.props.doGetUserByToken()
+          .then(resJson => {
+            console.log("doGetUserByToken", resJson);
+            if (resJson !== undefined){
+              var user = resJson.user;
+              this.setState({
+                user: user,
+              })
+            }
+          })
+        }
+      }
+    })
   }
 
   componentDidMount() {
