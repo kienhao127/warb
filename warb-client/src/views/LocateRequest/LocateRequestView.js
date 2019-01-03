@@ -65,7 +65,7 @@ class LocateRequestView extends Component {
   onReciveData = data => {
     console.log("data from socket key server_send_trip", data);
     var trips = this.state.tableData;
-    trips.push(data);
+    trips.unshift(data);
     this.setState({
       tableData: trips
     });
