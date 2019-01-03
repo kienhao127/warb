@@ -13,9 +13,6 @@ class DialogCheckingLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: "",
-      lat: 10.7627345,
-      lng: 106.6822347,
       isDialogOpen:false
     };
   }

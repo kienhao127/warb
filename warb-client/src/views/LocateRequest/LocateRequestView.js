@@ -72,7 +72,7 @@ class LocateRequestView extends Component {
   };
 
   render() {
-    const { open, infoTrip } = this.state;
+    const { open } = this.state;
 
     return (
       <div>
