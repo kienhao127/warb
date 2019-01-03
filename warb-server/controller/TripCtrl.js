@@ -122,6 +122,101 @@ exports.getAllTrip=function(req,res){
         });
     });
 }
+exports.addCustomerAndTrip2=function(req,res){
+    var c=req.body;
+    var stringUrl=`https://maps.googleapis.com/maps/api/geocode/json?address=${c.customerAddress}&key=${process.env.key}`;
+    var url = encodeURI(stringUrl);
+    mapRepo.getMapAPI(url)
+    .then(body=>{
+        if(body.status==="OK"){
+            tripRepo.addCustomer(c)
+            .then(rows=>{
+                console.log("them Customer thanh cong");
+                console.log(rows.insertId);
+                var customer={
+                    id:rows.insertId,
+                    customerName:c.customerName,
+                    customerPhone:c.customerPhone,
+                    customerAddress:c.customerAddress,
+                    isDelete:c.isDelete
+                }
+                let lat=body.results[0].geometry.location.lat;
+                let lng=body.results[0].geometry.location.lng;
+                let lo=lat+","+lng;
+                var trip={
+                    customerId:rows.insertId,
+                    driverId:0,
+                    tripLocation:lo,
+                    tripLongitude:lng,
+                    tripLatitude:lat,
+                    status:1,
+                    note: req.body.note,
+                    requestTime:moment().format('x'),
+                    isDelete:0
+                }
+                tripRepo.addTrip(trip)
+                .then(data=>{
+                    trip.id=data.insertId;
+                    tripRepo.getTripByTripId(trip.id)
+                    .then(values=>{
+                        console.log("values");
+                        console.log(values);
+                        socket.guidataForType(values,"server_send_trip");
+                        res.json({
+                            returnCode:1,
+                            status:"1",
+                            message:"Thêm khách hàng & chuyến đi thành công!",
+                            object:{
+                                trip:trip,
+                                customer:customer
+                            }
+                        });
+                    })
+                    .catch(er=>{
+                       res.json({
+                        returnCode:0,
+                        status:"FALSE",
+                        message:"Thêm khách hàng & chuyến đi thất bại!",
+                        error:er
+                    });
+                   });
+
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+            })
+            .catch(e=>{
+                res.json({
+                    returnCode:0,
+                    status:"FALSE",
+                    message:"Thêm khách hàng & chuyến đi thất bại!",
+                    error:e
+                });
+            })
+        }else if(body.status==="ZERO_RESULTS"){
+            res.json({
+                returnCode:1,
+                status:"0",
+                message:"lỗi định vị!"  
+            });
+        }else{
+            res.json({
+                returnCode:0,
+                status:"FALSE",
+                message:"lỗi định vị!"
+            });
+        }
+    })
+    .catch(err=>{
+        res.json({
+            returnCode:0,
+            status:"FALSE",
+            message:"Thêm khách hàng & chuyến đi thất bại!",
+            error:err
+        });
+    })
+}
 exports.addCustomerAndTrip=function(req,res){
     var c=req.body;
     var users=req.user_token;
