@@ -7,6 +7,7 @@ var cors = require('cors');
 var userRepos=require('./repos/UserRepos.js');
 var driver=require('./controller/DriverCtrl.js');
 var tripRepos=require('./repos/TripRepos.js');
+const path = require('path');
 
 app.use(morgan('dev'));
 app.use(cors());
