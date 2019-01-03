@@ -19,6 +19,7 @@ class App extends Component {
     }
 
     socket.on('token', data => {
+      console.log('new access token', data);
       sessionStorage.setItem('access_token', data);
     });
     socket.on('done_update', data => {

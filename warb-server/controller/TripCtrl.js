@@ -198,13 +198,13 @@ exports.addCustomerAndTrip2=function(req,res){
             res.json({
                 returnCode:1,
                 status:"0",
-                message:"lỗi định vị!"  
+                message:"Không định vị được. Xin vui lòng nhập lại địa chỉ khác!"  
             });
         }else{
             res.json({
                 returnCode:0,
                 status:"FALSE",
-                message:"lỗi định vị!"
+                message:"Không định vị được. Xin vui lòng nhập lại địa chỉ khác!" 
             });
         }
     })
