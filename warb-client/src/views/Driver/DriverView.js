@@ -29,6 +29,7 @@ class Driver extends Component {
     };
     socket.on('server_send_request', (data) => this.onReciveData(data));
     socket.on('update_status_driver', (data) => this.onReciveDriverStatus(data));
+    socket.on('update_status_trip', (data) => this.onReciveTripStatus(data));
   }
 
   handleClick = event => {
@@ -87,6 +88,13 @@ class Driver extends Component {
     })
   }
 
+  onReciveTripStatus = (data) => {
+    console.log("data from socket key update_status_trip", data);
+    this.setState({
+      currentTrip: data
+    })
+  }
+
   handleLogout = () => {
     sessionStorage.removeItem("access_token");
     this.props.history.push("/");
@@ -119,23 +127,23 @@ class Driver extends Component {
         driverStatus: newProps.userProfile.status
       })
     }
-    if (this.props.userProfile && this.props.userProfile.lastTripStatus === 6){
+    if (newProps.userProfile && newProps.userProfile.lastTripStatus === 6){
       console.log('this.props.userProfile.lastTripStatus');
       if (this.state.currentTrip === null){
         var endLoaction = {
-          lat: this.props.userProfile.lastTripLocation.lat,
-          lng: this.props.userProfile.lastTripLocation.lng,
+          lat: newProps.userProfile.lastTripLocation.lat,
+          lng: newProps.userProfile.lastTripLocation.lng,
         }
         this.setState({
-          currentTrip: this.props.userProfile.lastTrip,
+          currentTrip: newProps.userProfile.lastTrip,
           isTripStatusModelOpen: true
         })
         this.drawPolyline(endLoaction);
       }
     }
-    if (this.props.userProfile && this.props.userProfile.lastTripStatus === 4){
+    if (newProps.userProfile && newProps.userProfile.lastTripStatus === 4){
       this.setState({
-        currentTrip: this.props.userProfile.lastTrip,
+        currentTrip: newProps.userProfile.lastTrip,
         isTripStatusModelOpen: true
       })
     }
