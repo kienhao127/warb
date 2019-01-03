@@ -111,7 +111,8 @@ class Driver extends Component {
             lng: position.coords.longitude
           }
         })
-      })
+      }
+    )
     socket.emit('location_driver', this.state.currentLocation);
     if (this.props.userProfile != null)
     socket.emit('get_Driver_By_Id', this.props.userProfile.id);
@@ -164,6 +165,11 @@ class Driver extends Component {
     this.setState({
       isTripStatusModelOpen: true,
     })
+    setTimeout(function(){
+      this.setState({
+        isTripStatusModelOpen: false,
+      })
+    }, 10000);
   }
 
   onDriverMoving = () => {
@@ -294,8 +300,8 @@ class Driver extends Component {
             />
           </Map>
         </div>
-        <InfoTripModal onStartTrip={this.onStartTrip} onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
-        <TripStatusModal onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen} tripInfo={this.state.currentTrip}/>
+        <InfoTripModal onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
+        <TripStatusModal  onStartTrip={this.onStartTrip} onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen} tripInfo={this.state.currentTrip}/>
       </div>
     );
   }
