@@ -57,7 +57,7 @@ class DialogCheckingLocation extends Component {
           <Card>
             <CardHeader color="primary">
               <h2>
-                THÔNG TIN ĐỊA CHỈ: {address}
+                THÔNG TIN ĐỊA CHỈ: {info.customerAddress}
               </h2>
             </CardHeader>
             <div style={{ flex: 1, height: window.innerHeight }}>

@@ -79,6 +79,12 @@ class Driver extends Component {
       currentTrip: data,
       open: true
     })
+    const self = this
+    setTimeout(function(){
+      self.setState({
+        open: false,
+      })
+    }, 10000);
   }
 
   onReciveDriverStatus = (data) => {
@@ -165,11 +171,6 @@ class Driver extends Component {
     this.setState({
       isTripStatusModelOpen: true,
     })
-    setTimeout(function(){
-      this.setState({
-        isTripStatusModelOpen: false,
-      })
-    }, 10000);
   }
 
   onDriverMoving = () => {
