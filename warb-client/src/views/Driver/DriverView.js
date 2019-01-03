@@ -208,7 +208,12 @@ class Driver extends Component {
       steps: []
     })
   }
-
+  
+  onStartTrip = () => {
+    this.setState({
+      steps: []
+    })
+  }
   render() {
     const { lat, lng } = this.state.currentLocation;
     const { anchorEl, driverStatus } = this.state;
@@ -289,7 +294,7 @@ class Driver extends Component {
             />
           </Map>
         </div>
-        <InfoTripModal onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
+        <InfoTripModal onStartTrip={this.onStartTrip} onDriverAcceptTrip={this.onDriverAcceptTrip} onModalStateChange={this.onModalStateChange} open={this.state.open} tripInfo={this.state.currentTrip} />
         <TripStatusModal onFinishTrip={this.onFinishTrip} open={this.state.isTripStatusModelOpen} tripInfo={this.state.currentTrip}/>
       </div>
     );
